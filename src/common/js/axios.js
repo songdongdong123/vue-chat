@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import qs from 'qs'
+import qs from 'qs'
 import getUrl from './baseUrl'
 // import { getQueryString } from './common'
 // 配置axios的config
@@ -14,11 +14,11 @@ let config = {
     // 设置
     'Content-Type': 'application/x-www-form-urlencoded'
   },
-  // transformRequest: [function (data) {
-  //   // 处理发送前的数据
-  //   data = qs.stringify(data)
-  //   return data
-  // }],
+  transformRequest: [function (data) {
+    // 处理发送前的数据
+    data = qs.stringify(data)
+    return data
+  }],
   data: {
     // 全局参数
     channelType: '6',
@@ -27,18 +27,18 @@ let config = {
   }
 }
 // 拦截请求
-// axios.interceptors.request.use((config) => {
-//   console.log(config)
-//   return config
-// }, error => {
-//   return Promise.reject(error)
-// })
-// // axios拦截响应
-// axios.interceptors.response.use((data) => {
-//   return data
-// }, error => {
-//   return Promise.reject(error)
-// })
+axios.interceptors.request.use((config) => {
+  console.log(config)
+  return config
+}, error => {
+  return Promise.reject(error)
+})
+// axios拦截响应
+axios.interceptors.response.use((data) => {
+  return data
+}, error => {
+  return Promise.reject(error)
+})
 
 const get = (url, params) => {
   url = urlEncode(url, params)

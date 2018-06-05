@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { getTest, testMy } from 'api/test'
+import { register } from 'api/test'
 export default {
   name: 'HelloWorld',
   data () {
@@ -15,18 +15,13 @@ export default {
     }
   },
   created () {
-    this._testMy()
+    this._register()
   },
   methods: {
-    _testMy () {
-      testMy().then(res => {
-        console.log(res)
-      })
-    },
-    _getTest () {
-      getTest({
-        page: 0,
-        pageSize: 10
+    _register () {
+      register({
+        name: '1233',
+        age: 456
       }).then(res => {
         console.log(res)
       })

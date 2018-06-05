@@ -1,10 +1,9 @@
 import * as axios from '../common/js/axios.js'
 
-const getTest = params => axios.get('/index.php/address/getFistRollPic', params)
+// const getUserList = params => axios.get('/index.php/address/getFistRollPic', params)
 
-const testMy = params => axios.get('/user/test', params)
+const register = params => axios.post('/user/register', params)
 
 export {
-  getTest,
-  testMy
+  register
 }

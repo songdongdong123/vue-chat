@@ -14,13 +14,43 @@ const sequelize = new Sequelize(
   }
 );
 
-const user = sequelize.define(
+const account = sequelize.define(
   // tablename
-  'user',
+  'account',
   {
-    ''
+    'username': {
+      'type': Sequelize.STRING,
+      'allowNull': false
+    },
+    'pwd': {
+      'type': Sequelize.STRING,
+      'allowNull': false
+    },
+    'email': {
+      'type': Sequelize.STRING,
+      'allowNull': false
+    },
+    'avatar': {
+      'type': Sequelize.STRING,
+      'allowNull': false
+    },
+    'desc': {
+      'type': Sequelize.STRING,
+      'allowNull': false
+    },
+    'userid': {
+      'type': Sequelize.CHAR(18),
+      'allowNull': false,
+      'unique': true
+    },
+    'create_temp': {
+      'type': Sequelize.STRING,
+      'allowNull': false,
+      'unique': true
+    }
   }
 )
+account.sync();
 
 
 
@@ -29,3 +59,6 @@ sequelize.authenticate().then(() => {
 }).catch(err => {
   console.error('Unable to connect to the database:', err);
 });
+
+
+module.exports = account

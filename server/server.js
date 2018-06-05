@@ -1,8 +1,16 @@
 const express = require('express')
 
+const bodyParser = require('body-parser')
+
+const cookirParse = require('cookie-parser')
+
 const userRouter = require('./user')
 
 const app = express()
+
+app.use(cookirParse())
+app.use(bodyParser.urlencoded())
+// app.use(bodyParser.json())
 
 app.use('/user', userRouter)
 
