@@ -14,6 +14,29 @@ const sequelize = new Sequelize(
   }
 );
 
+const poetrylist = sequelize.define(
+  'poetrylist',
+  {
+    'content': {
+      'type': Sequelize.STRING,
+      'allowNull': false
+    },
+    'create_temp': {
+      'type': Sequelize.STRING,
+      'allowNull': false
+    },
+    'star': {
+      'type': Sequelize.BIGINT,
+      'allowNull': false
+    },
+    'recommend': {
+      'type': Sequelize.BIGINT,
+      'allowNull': false
+    }
+  }
+)
+poetrylist.sync();
+
 const account = sequelize.define(
   // tablename
   'account',
@@ -61,4 +84,4 @@ sequelize.authenticate().then(() => {
 });
 
 
-module.exports = account
+module.exports = sequelize
