@@ -28,7 +28,6 @@ let config = {
 }
 // 拦截请求
 axios.interceptors.request.use((config) => {
-  console.log(config)
   return config
 }, error => {
   return Promise.reject(error)

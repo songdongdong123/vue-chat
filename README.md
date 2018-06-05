@@ -1,12 +1,17 @@
 # vue-chat
 
-> A Vue.js project
+> 使用vue全家桶，搭配express和mysql和socket.io和一个事实聊天小项目
 
 ## Build Setup
 
 ``` bash
 # install dependencies
 npm install
+
+# 运行npm run dev 之前先确保本机安装了mysql
+mysql默认端口号3306
+
+#这里使用mysql2和sequelize来操作数据库
 
 # serve with hot reload at localhost:8080
 npm run dev
@@ -26,5 +31,3 @@ npm run e2e
 # run all tests
 npm test
 ```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
