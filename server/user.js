@@ -2,7 +2,9 @@ const express = require('express')
 
 const Router = express.Router()
 
-const account = require('./db')
+const sequelize = require('./db')
+const account = sequelize.model('account')
+const poetrylist = sequelize.model('poetrylist')
 
 Router.get('/test', function (req, res) {
   return res.json({
@@ -13,8 +15,18 @@ Router.get('/test', function (req, res) {
   })
 })
 
+Router.get('/getPoetryList', function(req, res) {
+  // 查询全部数据
+  poetrylist.findAll({}).then((doc) => {
+    return res.json({
+      code: 0,
+      data: doc
+    })
+  })
+})
+
 Router.post('/register', function (req, res) {
-  console.log(req.body)
+  // console.log(req.body)
   return res.json({
     code: 0,
     data: req.body
