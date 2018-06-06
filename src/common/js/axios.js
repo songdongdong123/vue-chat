@@ -21,9 +21,9 @@ let config = {
   }],
   data: {
     // 全局参数
-    channelType: '6',
-    channelTag: '6_7_0_0',
-    language: 'zh'
+    // channelType: '6',
+    // channelTag: '6_7_0_0',
+    // language: 'zh'
   }
 }
 // 拦截请求
