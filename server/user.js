@@ -15,6 +15,27 @@ Router.get('/test', function (req, res) {
   })
 })
 
+Router.get('/cleardata', function(req,res) {
+  // 清空全部数据
+  poetrylist.destroy({'where':{'id': 8}}).then((doc) => {
+    return res.json({
+      code: 0,
+      data: doc
+    })
+  })
+})
+
+Router.post('/addPoetryItem', function(req, res) {
+  const body = req.body
+  poetrylist.create(body.item).then(doc => {
+    return res.json({
+      code: 0,
+      data: doc
+    })
+  })
+  // console.log(body)
+})
+
 Router.get('/getPoetryList', function(req, res) {
   // 查询全部数据
   poetrylist.findAll({}).then((doc) => {
