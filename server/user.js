@@ -17,7 +17,7 @@ Router.get('/test', function (req, res) {
 
 Router.get('/cleardata', function(req,res) {
   // 清空全部数据
-  poetrylist.destroy({'where':{'id': 8}}).then((doc) => {
+  poetrylist.destroy({'where':{'id': 13}}).then((doc) => {
     return res.json({
       code: 0,
       data: doc
@@ -25,7 +25,20 @@ Router.get('/cleardata', function(req,res) {
   })
 })
 
+Router.post('/linkPoetry', function(req, res) {
+  // 点赞骚话
+  const num = req.body.num
+  const id = req.body.id
+  poetrylist.update({recommend: num},{'where':{id: id}}).then(doc => {
+    return res.json({
+      code: 0,
+      data: num
+    })
+  })
+})
+
 Router.post('/addPoetryItem', function(req, res) {
+  // 发表一个骚话
   const body = req.body
   poetrylist.create(body.item).then(doc => {
     return res.json({
@@ -37,7 +50,7 @@ Router.post('/addPoetryItem', function(req, res) {
 })
 
 Router.get('/getPoetryList', function(req, res) {
-  // 查询全部数据
+  // 获取全部骚话
   poetrylist.findAll({}).then((doc) => {
     return res.json({
       code: 0,
@@ -48,6 +61,7 @@ Router.get('/getPoetryList', function(req, res) {
 
 Router.post('/register', function (req, res) {
   // console.log(req.body)
+  // 注册
   return res.json({
     code: 0,
     data: req.body
