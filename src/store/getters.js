@@ -1,7 +1,7 @@
 const getPoetryList = state => state.poetryList
-const setPoetryItem = state => state.poetryItem
+const getPoetryItem = state => state.poetryItem
 
 export {
   getPoetryList,
-  setPoetryItem
+  getPoetryItem
 }
