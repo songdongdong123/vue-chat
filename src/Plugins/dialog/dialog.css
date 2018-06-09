@@ -1,0 +1,15 @@
+.dialogNode{
+  position: fixed;
+  z-index: 3000;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,.9);
+  top:0;
+  color: #fff;
+}
+.prizeImg{
+  width:4.66rem;
+  height:4.52rem;
+  background: url('./img/prize.png');
+  background-size: cover;
+}

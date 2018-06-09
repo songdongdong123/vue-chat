@@ -32,6 +32,10 @@ const poetrylist = sequelize.define(
     'recommend': {
       'type': Sequelize.BIGINT,
       'allowNull': false
+    },
+    'poetrylist_id': {
+      'type': Sequelize.CHAR(64),
+      'allowNull': false
     }
   }
 )
@@ -64,7 +68,7 @@ const account = sequelize.define(
       'allowNull': false
     },
     'userid': {
-      'type': Sequelize.CHAR(18),
+      'type': Sequelize.CHAR(64),
       'allowNull': false,
       'unique': true
     },

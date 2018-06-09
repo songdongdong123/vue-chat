@@ -51,6 +51,7 @@
         }
         this.setPoetryItem({item})
         this.closeThis()
+        this.content = ''
       },
       closeThis () {
         this.$emit('hidepoetrycontainer')
