@@ -5,9 +5,13 @@ import router from './router'
 import store from './store'
 import 'common/stylus/index.styl'
 import 'common/stylus/colorreset.styl'
-
+import { Loading } from './Plugins/index'
+Vue.use(Loading)
 Vue.config.productionTip = false
 
+// router.beforeEach((to, from, next) => {
+
+// })
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
