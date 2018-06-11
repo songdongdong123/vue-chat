@@ -5,13 +5,13 @@
         <img src="../login/logo.jpg" alt="">
       </div>
       <div class="base username">
-        <input type="text" v-on:focus="handlerBlur(0)" placeholder="用户名" v-model="username">
+        <input type="text"  placeholder="用户名" v-model="username">
       </div>
       <div class="base pssword">
-        <input type="password" v-on:focus="handlerBlur(0)" placeholder="密码" v-model="password">
+        <input type="password"  placeholder="密码" v-model="password">
       </div>
       <div class="base repeatpssword">
-        <input type="password" v-on:focus="handlerBlur(0)" placeholder="确认密码" v-model="repeatword">
+        <input type="password"  placeholder="确认密码" v-model="repeatword">
       </div>
       <div class="register" @click="handlerLogin">
         注册
@@ -33,29 +33,27 @@ export default {
   },
   methods: {
     handlerBlur () {
-      console.log('获取焦点')
+      // console.log('获取焦点')
     },
     handlerLogin () {
       // 注册
-      // let userinfo = {
-      //   user_name: this.username,
-      //   pwd: this.password
-      // }
-      // if (this.password === this.repeatword) {
-      //   this.registerAccount(userinfo)
-      // } else {
-      //   this.$toast({
-      //     state: true,
-      //     desc: '两次密码不一致',
-      //     duration: 2000
-      //   })
-      // }
-      this.$toast({
-        state: true,
-        desc: '两次密码不一致',
-        duration: 2000
-      })
-      console.log()
+      let userinfo = {
+        user_name: this.username,
+        pwd: this.password
+      }
+      if (this.password === this.repeatword) {
+        this.registerAccount({userinfo}).then(res => {
+          if (!res.userinfo) {
+            this.$router.push({path: '/userinfo'})
+          }
+        })
+      } else {
+        this.$toast({
+          state: true,
+          desc: '两次密码不一致',
+          duration: 2000
+        })
+      }
     },
     ...mapActions([
       'registerAccount'

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import qs from 'qs'
 import getUrl from './baseUrl'
+import Loading from '../../Plugins/loading/loading'
 // import { getQueryString } from './common'
 // 配置axios的config
 // console.log(getUrl())
@@ -28,12 +29,18 @@ let config = {
 }
 // 拦截请求
 axios.interceptors.request.use((config) => {
+  Loading({
+    state: true
+  })
   return config
 }, error => {
   return Promise.reject(error)
 })
 // axios拦截响应
 axios.interceptors.response.use((data) => {
+  Loading({
+    state: false
+  })
   return data
 }, error => {
   return Promise.reject(error)

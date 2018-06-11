@@ -36,6 +36,26 @@ export default new Router({
       meta: {
         title: '注册'
       }
+    },
+    {
+      path: '/usercenter',
+      name: 'usercenter',
+      component: (resolve) => {
+        require(['@/pages/usercenter/usercenter'], resolve)
+      },
+      meta: {
+        title: '用户中心'
+      }
+    },
+    {
+      path: '/userinfo',
+      name: 'userinfo',
+      component: (resolve) => {
+        require(['@/pages/userinfo/userinfo'], resolve)
+      },
+      meta: {
+        title: '用户信息'
+      }
     }
   ]
 })

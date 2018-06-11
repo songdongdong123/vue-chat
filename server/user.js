@@ -19,7 +19,27 @@ Router.get('/test', function (req, res) {
 
 Router.post('/register', function(req, res) {
   // 用户注册
-  console.log(req.body)
+  const body = req.body.userinfo
+  const {user_name, pwd} = req.body.userinfo
+  const data = {
+    user_name: user_name,
+    pwd: pwdMd5(pwd),
+    create_temp: new Date().getTime(),
+    user_id: pwdMd5(Date.now())
+  }
+  account.create(data).then(doc => {
+    const {user_name, user_id, user_info, avatar} = doc
+    res.cookie('user_id', user_id)
+    return res.json({
+      code: 0,
+      data: {
+        user_name: user_name,
+        user_id: user_id,
+        user_info: user_info,
+        avatar: avatar
+      }
+    })
+  })
 })
 
 Router.post('login', function (req, res) {
