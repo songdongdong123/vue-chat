@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <Title></Title>
-    <particle></particle>
+    <!-- <particle></particle> -->
     <poetry
       :poetry-state="poetrystate"
       @hidepoetrycontainer="hidepoetrycontainer"

@@ -47,7 +47,7 @@ const account = sequelize.define(
   // tablename
   'account',
   {
-    'username': {
+    'user_name': {
       'type': Sequelize.STRING,
       'allowNull': false
     },
@@ -57,15 +57,15 @@ const account = sequelize.define(
     },
     'email': {
       'type': Sequelize.STRING,
-      'allowNull': false
+      'allowNull': true
     },
     'avatar': {
       'type': Sequelize.STRING,
-      'allowNull': false
+      'allowNull': true
     },
-    'desc': {
+    'user_info': {
       'type': Sequelize.STRING,
-      'allowNull': false
+      'allowNull': true
     },
     'userid': {
       'type': Sequelize.CHAR(64),

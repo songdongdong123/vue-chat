@@ -17,6 +17,15 @@ Router.get('/test', function (req, res) {
   })
 })
 
+Router.post('/register', function(req, res) {
+  // 用户注册
+  console.log(req.body)
+})
+
+Router.post('login', function (req, res) {
+  console.log(req.body)
+})
+
 Router.get('/cleardata', function(req,res) {
   // 清空全部数据
   poetrylist.destroy({'where':{'id': 13}}).then((doc) => {
