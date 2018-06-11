@@ -67,7 +67,7 @@ const account = sequelize.define(
       'type': Sequelize.STRING,
       'allowNull': true
     },
-    'userid': {
+    'user_id': {
       'type': Sequelize.CHAR(64),
       'allowNull': false,
       'unique': true
