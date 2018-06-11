@@ -1,5 +1,7 @@
 <template>
-  <div id="particles-js"></div>
+  <div id="particles-js">
+    <slot></slot> 
+  </div>
 </template>
 <script>
   /* eslint-disable */
@@ -229,10 +231,11 @@
 
 <style>
   #particles-js{
-    position:absolute;
+    position: fixed;
     height:100%;
     width:100%;
     background:#331Caa;
-    top:0
+    top:0;
+    z-index: -1;
   }
 </style>

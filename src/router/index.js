@@ -26,6 +26,16 @@ export default new Router({
       meta: {
         title: '登录'
       }
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: (resolve) => {
+        require(['@/pages/register/register'], resolve)
+      },
+      meta: {
+        title: '注册'
+      }
     }
   ]
 })
