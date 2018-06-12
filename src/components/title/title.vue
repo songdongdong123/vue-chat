@@ -1,6 +1,9 @@
 <template>
   <div class="title">
-    <p>骚话，满天飞~~</p>
+    <div class="titlecontainer">
+      <p>骚话，满天飞~~</p>
+      <p class="icon"><span class="icon-gerenzhongxin"></span></p>
+    </div>
   </div>
 </template>
 
@@ -8,6 +11,9 @@
 export default {
   data () {
     return {}
+  },
+  methods: {
+    toUserCenter () {}
   }
 }
 </script>
@@ -26,4 +32,12 @@ export default {
     left:0
     z-index: 1000
     border-bottom:1px dashed #999
+    .titlecontainer
+      position: relative
+      .icon
+        position:absolute
+        top:0
+        right:0
+        width:50px
+        font-size 24px
 </style>
