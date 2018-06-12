@@ -18,11 +18,12 @@ export default {
     position:fixed
     width:100%
     height:50px
-    background:$color-meta
+    background:#331Caa
     color:#fff
     line-height:50px
     text-align:center
     top:0
     left:0
     z-index: 1000
+    border-bottom:1px dashed #999
 </style>

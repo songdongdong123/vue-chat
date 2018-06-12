@@ -5,15 +5,18 @@
     </div>
     <p class="chooseyouimg">选择您的头像</p>
     <div class="chooseavater">
-      <img :src="require(`../../assets/avater/${list}.jpg`)" alt="" v-for="list in imglist">
+      <img 
+        :src="require(`../../assets/avater/${list}.jpg`)" alt="" 
+        :class="{'active': index === ind}"
+        v-for="(list, index) in imglist" @click="chooseavater(list, index)">
     </div>
     <div class="email">
-      <input type="text" placeholder="填写邮箱，便于我们联系您">
+      <input type="text" placeholder="填写邮箱，便于我们联系您" v-model="email">
     </div>
     <div class="userinfodesc">
-      <textarea placeholder="描述一下你的爱好......"></textarea>
+      <textarea placeholder="描述一下你的爱好......" v-model="userinfo"></textarea>
     </div>
-    <div class="update">
+    <div class="update" @click="updatauserinfo">
       <p>确认提交</p>
     </div>
   </div>
@@ -21,11 +24,37 @@
 
 
 <script>
+  import { mapActions } from 'vuex'
   export default {
     data () {
       return {
-        imglist: [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 14]
+        imglist: [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 14],
+        userinfo: '',
+        email: '',
+        avatermgs: '',
+        ind: null
       }
+    },
+    methods: {
+      chooseavater (list, index) {
+        this.avatermgs = list
+        this.ind = index
+      },
+      updatauserinfo () {
+        let userinfo = {
+          email: this.email,
+          avatar: this.avatermgs,
+          user_info: this.userinfo
+        }
+        this._updataUserInfo({userinfo}).then(res => {
+          if (res) {
+            this.$router.push({path: '/usercenter'})
+          }
+        })
+      },
+      ...mapActions([
+        '_updataUserInfo'
+      ])
     }
   }
 </script>
@@ -57,6 +86,10 @@
         border-radius:100%
         margin-right:30px
         margin-top:20px
+        transition:all .5s
+      .active
+        // box-sizing:border-box
+        border:2px solid #fff
     .chooseavater>img:nth-child(4n)
       margin-right:0
     .email

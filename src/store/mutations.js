@@ -6,6 +6,9 @@ const mutations = {
   },
   [types.SET_POETRY_ITEM] (state, item) {
     state.poetryItem = item
+  },
+  [types.SET_USER_INFO] (state, userinfo) {
+    state.userinfo = userinfo
   }
 }
 

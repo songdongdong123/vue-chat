@@ -5,10 +5,10 @@
         <img src="./logo.jpg" alt="">
       </div>
       <div class="base username">
-        <input type="text" v-on:focus="handlerBlur(0)">
+        <input type="text" v-on:focus="handlerBlur(0)" placeholder="用户名">
       </div>
       <div class="base pssword">
-        <input type="password" v-on:focus="handlerBlur(0)">
+        <input type="password" v-on:focus="handlerBlur(0)" placeholder="密码">
       </div>
       <div class="login">
         <p>登录</p>
@@ -70,6 +70,8 @@ export default {
           padding:0 15px
           box-sizing:border-box
           font-size:20px
+          background:rgba(0,0,0,0)
+          color:#fff
       .baseblur
         border-color:#331Ccc
       .login
@@ -83,7 +85,8 @@ export default {
         display:flex
         justify-content:space-between
         p
-          background:#331Ccc
+          background:rgba(0,0,0,0)
           border-radius:5px
           width:45%
+          border:1px solid #fff
 </style>

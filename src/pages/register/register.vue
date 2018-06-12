@@ -96,15 +96,18 @@ export default {
           padding:0 15px
           box-sizing:border-box
           font-size:20px
+          background:rgba(0,0,0,0)
+          color:#fff
       .baseblur
         border-color:#331Ccc
       .register
         width:300px
         margin-top:40px
-        background:#331Ccc
+        background:rgba(0,0,0,0)
         height:45px
         border-radius:5px
         color:#fff
         text-align:center
         line-height:45px
+        border:1px solid #fff
 </style>
