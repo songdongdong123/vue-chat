@@ -6,7 +6,14 @@ const register = params => axios.post('/user/register', params)
 // 用户登录
 const login = params => axios.post('/user/login', params)
 
+// 完善用户信息
+const updataUserInfo = params => axios.post('/user/updataUserInfo', params)
+
+const getUserInfo = params => axios.post('/user/getUserInfo', params)
+
 export {
   register,
-  login
+  login,
+  updataUserInfo,
+  getUserInfo
 }

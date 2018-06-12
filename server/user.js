@@ -42,6 +42,49 @@ Router.post('/register', function(req, res) {
   })
 })
 
+Router.post('/updataUserInfo', function(req,res) {
+  // 完善用户信息
+  const user_id = req.cookies.user_id
+  const user_info = req.body.userinfo
+  account.update(user_info, {'where': {'user_id': user_id}}).then((doc) => {
+    return res.json({
+      code: 0,
+      data: {
+        user_info: user_info
+      }
+    })
+  })
+})
+
+Router.post('/getUserInfo', function(req,res) {
+  // 完善用户信息
+  const user_id = req.cookies.user_id
+  account.findOne({'where': {'user_id': user_id}}).then((doc) => {
+    // 过滤用户信息
+    const {email, user_info, user_name, avatar} = doc
+    const userinfo = {
+      email: email,
+      user_info: user_info,
+      user_name: user_name,
+      avatar: avatar
+    }
+    return res.json({
+      code: 0,
+      data: userinfo
+    })
+  })
+})
+
+Router.get('/getalluser', function(req,res) {
+  // 用户列表
+  account.findAll({}).then(doc => {
+    return res.json({
+      code: 0,
+      data: doc
+    })
+  })
+})
+
 Router.post('login', function (req, res) {
   console.log(req.body)
 })
@@ -91,32 +134,6 @@ Router.get('/getPoetryList', function(req, res) {
       data: doc
     })
   })
-})
-
-Router.post('/register', function (req, res) {
-  // console.log(req.body)
-  // 注册
-  return res.json({
-    code: 0,
-    data: req.body
-  })
-  // var test = {
-  //   username: 'admin2',
-  //   pwd: '123456',
-  //   email: '172529131@qq.com',
-  //   avatar: 'admin',
-  //   desc: '我是超级管理员1',
-  //   userid: '000000000000000002',
-  //   create_temp: new Date().getTime()
-  // };
-  // account.create(test).then(function(msg){
-  //   console.log(msg)
-  //   return res.json({
-  //     code: 0,
-  //     data: msg
-  //   })
-  // })
-  // console.log(account.get({'plain': true}))
 })
 
 // 我们自己对原始的MD5进行复杂度调整

@@ -91,12 +91,13 @@
       position: relative
       textarea
         text-align:center
-        width:250px
-        height:100px
+        width:300px
+        height:150px
         overflow-y:hidden 
-        border:1px solid $color-meta
+        border:1px solid #331Caa
         padding:10px
         margin-top: 50px
+        border-radius: 5px
       .bottom
         position:absolute
         width:80%
@@ -110,14 +111,14 @@
           border-radius:10px
           text-align:center
           line-height:40px
-          border:1px solid #ccc
+          border:1px solid #331Caa
           box-sizing:border-box
-          color:#333
+          color:#331Caa
         .submit
           width:100px
           height:40px
           border-radius:10px
-          background:$color-meta
+          background:#331Caa
           text-align:center
           line-height:40px
           color:#fff

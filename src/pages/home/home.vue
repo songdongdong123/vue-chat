@@ -44,6 +44,8 @@ import scroll from '@/components/scroll/scroll'
 import poetry from '@/components/poetry/poetry'
 import particle from '@/components/particle/particle'
 import { linkPoetry } from 'api/home'
+import { getCookie } from 'common/js/common'
+const cookie = getCookie('user_id')
 export default {
   data () {
     return {
@@ -64,7 +66,11 @@ export default {
   methods: {
     showpoetrycontainer () {
       // 显示发表输入框
-      this.poetrystate = !this.poetrystate
+      if (cookie) {
+        this.poetrystate = !this.poetrystate
+      } else {
+        this.$router.push({path: '/login'})
+      }
     },
     hidepoetrycontainer () {
       // 关闭发表输入弹窗
@@ -75,15 +81,24 @@ export default {
     },
     _linkPoetry (list, index) {
       // 点赞
-      linkPoetry({
-        num: Number(Number(list.recommend) + 1),
-        id: Number(list.id)
-      }).then(res => {
-        console.log(list.recommend + 1)
-        let getPoetryList = JSON.parse(JSON.stringify(this.getPoetryList))
-        getPoetryList[index].recommend = res.data.data
-        this.updatapoetrylist(getPoetryList)
-      })
+      if (cookie) {
+        linkPoetry({
+          num: Number(Number(list.recommend) + 1),
+          id: Number(list.id)
+        }).then(res => {
+          console.log(list.recommend + 1)
+          let getPoetryList = JSON.parse(JSON.stringify(this.getPoetryList))
+          getPoetryList[index].recommend = res.data.data
+          this.updatapoetrylist(getPoetryList)
+        })
+      } else {
+        this.$toast({
+          state: true,
+          desc: '登录之后才能点赞哦~~',
+          duration: 1000
+        })
+        this.$router.push({path: '/login'})
+      }
     },
     _zan () {
       this.animationstate = true
@@ -163,9 +178,10 @@ export default {
       position:fixed
       bottom:0
       height:50px
-      background:$color-meta
+      background:#331Caa
       width:100%
       color:#fff
       line-height:50px
       text-align:center
+      border-top:1px dashed #999
 </style>
