@@ -56,6 +56,16 @@ export default new Router({
       meta: {
         title: '用户信息'
       }
+    },
+    {
+      path: '/poetrydetail',
+      name: 'poetrydetail',
+      component: (resolve) => {
+        require(['@/pages/poetrydetail/poetrydetail'], resolve)
+      },
+      meta: {
+        title: '用户信息'
+      }
     }
   ]
 })

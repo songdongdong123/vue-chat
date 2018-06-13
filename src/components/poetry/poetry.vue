@@ -32,26 +32,24 @@
       ])
     },
     methods: {
-      _setPoetryItem () {
-        const item = {
-          content: this.content,
-          create_temp: new Date().getTime(),
-          star: 0,
-          recommend: 0
-        }
-        this.setPoetryItem({item})
-      },
       submitpoetry () {
         // 发表骚话
-        const item = {
-          content: this.content,
-          create_temp: new Date().getTime(),
-          star: 0,
-          recommend: 0
+        if (this.content) {
+          const item = {
+            content: this.content,
+            create_temp: new Date().getTime(),
+            star: 0,
+            recommend: 0
+          }
+          this.setPoetryItem({item})
+          this.closeThis()
+          this.content = ''
+        } else {
+          this.$toast({
+            state: true,
+            desc: '没有输入任何内容'
+          })
         }
-        this.setPoetryItem({item})
-        this.closeThis()
-        this.content = ''
       },
       closeThis () {
         this.$emit('hidepoetrycontainer')

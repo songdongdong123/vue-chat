@@ -13,7 +13,7 @@
       class="poetrylist"
     >
       <ul>
-        <li class="poetryitem" v-for="(list, index) in getPoetryList" :key="index">
+        <li class="poetryitem" v-for="(list, index) in getPoetryList" :key="index" @click="toPoetryDetail(list)">
           <div class="poetrycontainer">
             <div v-for="(item, ind) in list.content.split('\n').map(v => {
               return v
@@ -45,18 +45,19 @@ import poetry from '@/components/poetry/poetry'
 import particle from '@/components/particle/particle'
 import { linkPoetry } from 'api/home'
 import { getCookie } from 'common/js/common'
-const cookie = getCookie('user_id')
 export default {
   data () {
     return {
       content: '',
       listenScroll: true,
       animationstate: false,
-      poetrystate: false
+      poetrystate: false,
+      cookie: ''
     }
   },
   created () {
     this._getPoetryList()
+    this.cookie = getCookie('user_id')
   },
   computed: {
     ...mapGetters([
@@ -66,7 +67,7 @@ export default {
   methods: {
     showpoetrycontainer () {
       // 显示发表输入框
-      if (cookie) {
+      if (this.cookie) {
         this.poetrystate = !this.poetrystate
       } else {
         this.$router.push({path: '/login'})
@@ -79,9 +80,13 @@ export default {
     _getPoetryList () {
       this.poetryList()
     },
+    toPoetryDetail (list) {
+      // 文章详情
+      this.$router.push({path: '/poetrydetail', query: {poetrylist_id: list.poetrylist_id}})
+    },
     _linkPoetry (list, index) {
       // 点赞
-      if (cookie) {
+      if (this.cookie) {
         linkPoetry({
           num: Number(Number(list.recommend) + 1),
           id: Number(list.id)
