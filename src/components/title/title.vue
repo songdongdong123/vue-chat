@@ -2,7 +2,7 @@
   <div class="title">
     <div class="titlecontainer">
       <p>骚话，满天飞~~</p>
-      <p class="icon"><span class="icon-gerenzhongxin"></span></p>
+      <p class="icon" @click="toUserCenter"><span class="icon-gerenzhongxin"></span></p>
     </div>
   </div>
 </template>
@@ -13,7 +13,9 @@ export default {
     return {}
   },
   methods: {
-    toUserCenter () {}
+    toUserCenter () {
+      this.$router.push({path: '/usercenter'})
+    }
   }
 }
 </script>

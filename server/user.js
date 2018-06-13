@@ -85,10 +85,6 @@ Router.get('/getalluser', function(req,res) {
   })
 })
 
-Router.post('login', function (req, res) {
-  console.log(req.body)
-})
-
 Router.get('/cleardata', function(req,res) {
   // 清空全部数据
   poetrylist.destroy({'where':{'id': 13}}).then((doc) => {
@@ -116,7 +112,8 @@ Router.post('/addPoetryItem', function(req, res) {
   // pwdMd5
   const body = req.body.item
   const data = Object.assign({},{
-    poetrylist_id: pwdMd5(Date.now())
+    poetrylist_id: pwdMd5(Date.now()),
+    user_id: req.cookies.user_id
   },body)
   poetrylist.create(data).then(doc => {
     return res.json({
@@ -133,6 +130,28 @@ Router.get('/getPoetryList', function(req, res) {
       code: 0,
       data: doc
     })
+  })
+})
+
+Router.post('/login', function(req, res) {
+  // 用户登录
+  const {user_name, pwd} = req.body
+  account.findOne({'where': {'user_name': user_name, 'pwd': pwdMd5(pwd)}}).then(doc => {
+    if (doc) {
+      res.cookie('user_id', doc.user_id)
+      return res.json({
+        code:0,
+        data: {
+          user_name: doc.user_name,
+          user_id: doc.user_id
+        }
+      })
+    } else {
+      return res.json({
+        code: 1,
+        msg: '用户名或密码不存在'
+      })
+    }
   })
 })
 

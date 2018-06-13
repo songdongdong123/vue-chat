@@ -41,6 +41,27 @@ export default {
         user_name: this.username,
         pwd: this.password
       }
+      if (!this.username) {
+        this.$toast({
+          state: true,
+          desc: '请输入用户名'
+        })
+        return
+      }
+      if (!this.password) {
+        this.$toast({
+          state: true,
+          desc: '请输入密码'
+        })
+        return
+      }
+      if (!this.repeatword) {
+        this.$toast({
+          state: true,
+          desc: '请确认密码'
+        })
+        return
+      }
       if (this.password === this.repeatword) {
         this.registerAccount({userinfo}).then(res => {
           if (!res.userinfo) {

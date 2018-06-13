@@ -5,13 +5,13 @@
         <img src="./logo.jpg" alt="">
       </div>
       <div class="base username">
-        <input type="text" v-on:focus="handlerBlur(0)" placeholder="用户名">
+        <input type="text" placeholder="用户名" v-model="user_name">
       </div>
       <div class="base pssword">
-        <input type="password" v-on:focus="handlerBlur(0)" placeholder="密码">
+        <input type="password" placeholder="密码" v-model="pwd">
       </div>
       <div class="login">
-        <p>登录</p>
+        <p @click="handlerLogin">登录</p>
         <p @click="toRgister">注册</p>
       </div>
     </div>
@@ -19,19 +19,47 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   data () {
     return {
-      blurstate: false
+      blurstate: false,
+      user_name: '',
+      pwd: ''
     }
   },
   methods: {
-    handlerBlur () {
-      console.log('获取焦点')
+    handlerLogin () {
+      if (!this.user_name) {
+        this.$toast({
+          state: true,
+          desc: '请输入用户名'
+        })
+        return
+      }
+      if (!this.pwd) {
+        this.$toast({
+          state: true,
+          desc: '请输入密码'
+        })
+        return
+      }
+      let userinfo = {
+        user_name: this.user_name,
+        pwd: this.pwd
+      }
+      this.userLogin({userinfo}).then(res => {
+        if (res.status === 200 && res.data.code === 0) {
+          this.$router.push({path: '/'})
+        }
+      })
     },
     toRgister () {
       this.$router.push({path: '/register'})
-    }
+    },
+    ...mapActions([
+      'userLogin'
+    ])
   }
 }
 </script>

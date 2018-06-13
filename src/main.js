@@ -6,6 +6,7 @@ import store from './store'
 import 'common/stylus/index.styl'
 import 'common/stylus/colorreset.styl'
 import { Loading, Toast } from './Plugins/index'
+import { getCookie } from 'common/js/common'
 Vue.use(Loading)
 Vue.use(Toast)
 Vue.config.productionTip = false
@@ -13,6 +14,14 @@ Vue.config.productionTip = false
 router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     document.title = to.meta.title
+  }
+  if (to.name === 'usercenter') {
+    let cookie = getCookie('user_id')
+    if (!cookie) {
+      next(false)
+      router.push({path: '/login'})
+      return null
+    }
   }
   next()
 })

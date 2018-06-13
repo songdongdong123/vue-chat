@@ -18,7 +18,7 @@ const poetrylist = sequelize.define(
   'poetrylist',
   {
     'content': {
-      'type': Sequelize.STRING,
+      'type': Sequelize.TEXT,
       'allowNull': false
     },
     'create_temp': {
@@ -36,11 +36,36 @@ const poetrylist = sequelize.define(
     'poetrylist_id': {
       'type': Sequelize.CHAR(64),
       'allowNull': false
+    },
+    'user_id': {
+    'type': Sequelize.STRING,
+    'allowNull': false
     }
   }
 )
 poetrylist.sync();
 
+const guestbook = sequelize.define(
+  'guestbook',
+  {
+    'poetrylist_id': {
+      'type': Sequelize.CHAR(64),
+      'allowNull': false
+    },
+    'guest_count': {
+      'type': Sequelize.STRING,
+      'allowNull': false
+    },
+    'user_name': {
+      'type': Sequelize.STRING,
+      'allowNull': false
+    },
+    'guest_time': {
+      'type': Sequelize.STRING,
+      'allowNull': false
+    }
+  }
+)
 
 
 const account = sequelize.define(
@@ -76,6 +101,10 @@ const account = sequelize.define(
       'type': Sequelize.STRING,
       'allowNull': false,
       'unique': true
+    },
+    'user_fans': {
+      'type': Sequelize.INTEGER,
+      'allowNull': true
     }
   }
 )
