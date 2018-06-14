@@ -2,6 +2,7 @@ import * as types from './mutation-types'
 import { Loading } from '../Plugins/index'
 import { getPoetryList, addPoetryItem } from 'api/home'
 import { register, updataUserInfo, getUserInfo, login } from 'api/account'
+import { getPoetryDetail } from 'api/poetry'
 const poetryList = function ({commit, state}) {
   // 获取骚话列表
   getPoetryList({}).then(res => {
@@ -76,6 +77,13 @@ const userLogin = function ({commit, state}, {userinfo}) {
     })
   })
 }
+const _getPoetryDetail = function ({commit, state}, {id}) {
+  return new Promise((resolve, reject) => {
+    getPoetryDetail(id).then(res => {
+      resolve(res)
+    })
+  })
+}
 
 export {
   poetryList,
@@ -83,5 +91,6 @@ export {
   registerAccount,
   _updataUserInfo,
   _getUserInfo,
-  userLogin
+  userLogin,
+  _getPoetryDetail
 }

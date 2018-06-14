@@ -155,6 +155,33 @@ Router.post('/login', function(req, res) {
   })
 })
 
+Router.post('/searchPoetryDetail', function(req, res) {
+  const {user_id, poetrylist_id} = req.body
+  account.findOne({'where': {'user_id': user_id}}).then(doc => {
+    const userinfo = {
+      avatar: doc.avatar,
+      user_fans: doc.user_fans,
+      user_info: doc.user_info,
+      user_name: doc.user_name,
+      create_temp: doc.create_temp
+    }
+    poetrylist.findOne({'where': {'poetrylist_id':poetrylist_id}}).then(doc => {
+      const poetrydetail = {
+        content: doc.content,
+        create_temp: doc.create_temp,
+        recommend: doc.recommend,
+        star: doc.star,
+        poetrylist_id: doc.poetrylist_id
+      }
+      const datas = Object.assign({},{userinfo},{poetrydetail})
+      return res.json({
+        code: 0,
+        data: datas
+      })
+    })
+  })
+})
+
 // 我们自己对原始的MD5进行复杂度调整
 function pwdMd5(pwd) {
   const salt = 'Ethan_is_man_56good#@!45$sss$453%^&9**~~~~``'

@@ -28,6 +28,10 @@
         type: Array,
         default: null
       },
+      dataobj: {
+        type: Object,
+        default: null
+      },
       list: {
         type: Array,
         default: null
@@ -71,13 +75,11 @@
         }
         if (this.listenScrollEnd) {
           this.scroll.on('scrollEnd', (pos) => {
-            // console.log(this.scroll.y)
             this.$emit('scrollEnd', this.scroll.y)
           })
         }
         if (this.pullUp) {
-          this.scroll.on('touchend', (pos) => {
-            // console.log(pos)
+          this.scroll.on('touchEnd', (pos) => {
             if (pos.y > 50) {
               this.$emit('pullDown')
             }
@@ -111,6 +113,11 @@
         }, this.refreshDelay)
       },
       listenScroll () {
+        setTimeout(() => {
+          this.refresh()
+        }, this.refreshDelay)
+      },
+      dataobj () {
         setTimeout(() => {
           this.refresh()
         }, this.refreshDelay)
