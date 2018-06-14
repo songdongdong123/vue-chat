@@ -1,7 +1,6 @@
 <template>
   <div class="home">
     <Title></Title>
-    <!-- <particle></particle> -->
     <poetry
       :poetry-state="poetrystate"
       @hidepoetrycontainer="hidepoetrycontainer"
@@ -9,6 +8,8 @@
     <scroll
       :listenScroll="listenScroll"
       :data="getPoetryList"
+      @pullDown="pullDowns"
+      @scrollDown="scrollDowns"
       ref="content"
       class="poetrylist"
     >
@@ -65,6 +66,12 @@ export default {
     ])
   },
   methods: {
+    pullDowns () {
+      console.log('下拉刷新')
+    },
+    scrollDowns () {
+      console.log('上拉加载')
+    },
     showpoetrycontainer () {
       // 显示发表输入框
       if (this.cookie) {
@@ -82,7 +89,7 @@ export default {
     },
     toPoetryDetail (list) {
       // 文章详情
-      this.$router.push({path: '/poetrydetail', query: {poetrylist_id: list.poetrylist_id}})
+      this.$router.push({path: '/poetrydetail', query: {poetrylist_id: list.poetrylist_id, user_id: list.user_id}})
     },
     _linkPoetry (list, index) {
       // 点赞
@@ -91,7 +98,6 @@ export default {
           num: Number(Number(list.recommend) + 1),
           id: Number(list.id)
         }).then(res => {
-          console.log(list.recommend + 1)
           let getPoetryList = JSON.parse(JSON.stringify(this.getPoetryList))
           getPoetryList[index].recommend = res.data.data
           this.updatapoetrylist(getPoetryList)
