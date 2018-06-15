@@ -33,7 +33,7 @@
       </ul>
     </scroll>
     <div class="bottom" @click="showpoetrycontainer">
-      <p>发表你的骚话吧~~</p>
+      <p>发表此时此刻~~</p>
     </div>
   </div>
 </template>
