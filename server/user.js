@@ -5,6 +5,7 @@ const Router = express.Router()
 const sequelize = require('./db')
 const account = sequelize.model('account')
 const poetrylist = sequelize.model('poetrylist')
+const guestbook = sequelize.model('guestbook')
 
 const utility  = require('utility')
 
@@ -178,6 +179,29 @@ Router.post('/searchPoetryDetail', function(req, res) {
         code: 0,
         data: datas
       })
+    })
+  })
+})
+
+Router.post('/sendComment', function (req, res) {
+  // 发表评论
+  const data = Object.assign({},req.body,{
+    guest_time: Date.now()
+  })
+  guestbook.create(data).then(doc => {
+    return res.json({
+      code: 0,
+      data: doc
+    })
+  })
+})
+
+Router.post('/getAllComments', function(req, res) {
+  const poetrylist_id = req.body.poetrylist_id
+  guestbook.findAll({'where': {'poetrylist_id': poetrylist_id}}).then(doc => {
+    return res.json({
+      code: 0,
+      data: doc
     })
   })
 })
