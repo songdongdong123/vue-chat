@@ -25,7 +25,7 @@
                 <span class="icon icon-day">
                 </span>{{list.star}}
               </p>
-              <p @click="_linkPoetry(list, index)">
+              <p @click.stop="_linkPoetry(list, index)">
                 <span class="icon icon-dianzan" :class="{'icon_animation': animationstate}"></span>
                 {{list.recommend}}</p>
             </div>

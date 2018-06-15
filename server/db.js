@@ -56,16 +56,25 @@ const guestbook = sequelize.define(
       'type': Sequelize.STRING,
       'allowNull': false
     },
-    'user_name': {
+    'user_id': {
       'type': Sequelize.STRING,
       'allowNull': false
     },
     'guest_time': {
       'type': Sequelize.STRING,
       'allowNull': false
+    },
+    'star_num': {
+      'type': Sequelize.BIGINT,
+      'allowNull': true
+    },
+    'transpond': {
+      'type': Sequelize.BIGINT,
+      'allowNull': true
     }
   }
 )
+guestbook.sync();
 
 
 const account = sequelize.define(

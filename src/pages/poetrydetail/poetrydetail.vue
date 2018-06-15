@@ -1,8 +1,9 @@
 <template>
+<transition name="slide">
   <div class="poetrydetail">
     <div class="title">
       <div class="titlecontainer">
-        <p class="icon iconleft"><span class="icon-fanhui"></span></p>
+        <p class="icon iconleft" @click="backHome"><span class="icon-fanhui"></span></p>
         <p>文章详情</p>
         <p class="icon iconright"><span class="icon-more_light"></span></p>
       </div>
@@ -31,23 +32,37 @@
             })">{{list}}</p>
           <div class="lite">
             <p>转发<span>100</span></p>
-            <p>评论{{2000}}</p>
+            <p class="comment">评论{{2000}}</p>
             <p>赞{{22.2}}</p>
           </div>
         </div>
+        <commentlist
+          :commentlist="getcommentlists"
+        ></commentlist>
       </div>
     </scroll>
     <div class="send">
-      <div class="textarea">
-        <textarea></textarea>
+      <div class="textareacontainer">
+        <span @click="showcomment_fn">发表评论</span>
+        <p class="left">
+          <span class="icon-zhuanfa"></span>
+          <span class="icon-dianzan"></span>
+        </p>
       </div>
     </div>
+    <comment
+      :showstate="showcomment"
+      @hidecomment="hidecomment"
+    ></comment>
   </div>
+</transition>
 </template>
 
 <script>
   import scroll from '@/components/scroll/scroll'
-  import { mapActions } from 'vuex'
+  import comment from '@/components/comment/comment'
+  import commentlist from '@/components/commentlist/commentlist'
+  import { mapActions, mapGetters } from 'vuex'
   export default {
     data () {
       return {
@@ -55,17 +70,36 @@
         poetrydetail: {},
         userinfo: {},
         user_id: '',
-        poetrylist_id: ''
+        poetrylist_id: '',
+        showcomment: false,
+        commentlist: []
       }
     },
     components: {
-      scroll
+      scroll,
+      comment,
+      commentlist
+    },
+    computed: {
+      ...mapGetters([
+        'getcommentlists'
+      ])
     },
     created () {
       [this.user_id, this.poetrylist_id] = [this.$route.query.user_id, this.$route.query.poetrylist_id]
       this._getppoetrydetail()
+      this.getAllComments()
     },
     methods: {
+      backHome () {
+        this.$router.back()
+      },
+      showcomment_fn () {
+        this.showcomment = true
+      },
+      hidecomment () {
+        this.showcomment = false
+      },
       _getppoetrydetail () {
         let id = {
           user_id: this.user_id,
@@ -78,25 +112,46 @@
           }
         })
       },
+      getAllComments () {
+        let id = {
+          poetrylist_id: this.poetrylist_id
+        }
+        this._getAllComments({id}).then(res => {
+          if (res.status === 200 && res.data.code === 0) {
+            this.commentlist = res.data.data
+          }
+        })
+      },
       ...mapActions([
-        '_getPoetryDetail'
+        '_getPoetryDetail',
+        '_getAllComments'
       ])
     }
   }
 </script>
 
 <style lang="stylus" scoped>
+  .slide-enter-active,.slide-leave-active
+    transition: all .5s
+  .slide-enter
+    transform: translate3d(100%, 0, 0)
+    opacity:1
+  .slide-leave-to
+    transform: translate3d(100%, 0, 0)
+    background:#331Caa
   .poetrydetail
     position:absolute
     min-height:100vh
     width:100%
+    z-index:500
     .title
       height:45px
       width:100%
       position:fixed
-      background:rgba(51,28,170,.6)
-      border-bottom:1px dashed #999
+      background:rgba(51,28,170,1)
+      border-bottom:1px solid #999
       top:0
+      z-index:100
       .titlecontainer
         position: relative
         p
@@ -117,7 +172,7 @@
         .iconright
           right:0
     .container
-      height:10rem
+      height:500px
       // margin:auto 15px
       margin-top:65px
       color:#fff
@@ -143,7 +198,7 @@
                 color:#ccc
         .ethancard
           padding:15px
-          border-bottom:1px dashed #999
+          border-bottom:1px solid #999
           padding-bottom:0
           p
             margin-top:10px
@@ -154,8 +209,33 @@
               color: #999
               height:40px
               line-height:40px
-        .send
-          position:fixed
-          bottom:0
+            .comment
+              color:#fff
+    .send
+      position:fixed
+      bottom:0
+      z-index:1000
+      box-sizing:border-box
+      width:100%
+      height:50px
+      background:rgba(51,28,170,1)
+      .textareacontainer
+        height:50px
+        border-top:1px dashed #ccc
+        display:flex
+        justify-content:space-between
+        span
+          width:300px
+          text-align:left
+          line-height:50px
+          color:#bbb
+          padding-left:10px
+        .left
+          width:100px
+          font-size:20px
+          display:flex
+          justify-content:space-between
+          span
+            color:#fff
 </style>
 

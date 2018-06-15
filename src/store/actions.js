@@ -3,6 +3,7 @@ import { Loading } from '../Plugins/index'
 import { getPoetryList, addPoetryItem } from 'api/home'
 import { register, updataUserInfo, getUserInfo, login } from 'api/account'
 import { getPoetryDetail } from 'api/poetry'
+import { sendComment, getAllComments } from 'api/comment'
 const poetryList = function ({commit, state}) {
   // 获取骚话列表
   getPoetryList({}).then(res => {
@@ -78,9 +79,33 @@ const userLogin = function ({commit, state}, {userinfo}) {
   })
 }
 const _getPoetryDetail = function ({commit, state}, {id}) {
+  // 获取文章详情
   return new Promise((resolve, reject) => {
     getPoetryDetail(id).then(res => {
       resolve(res)
+    })
+  })
+}
+
+const sendArtComment = function ({commit, state}, {comment}) {
+  return new Promise((resolve, reject) => {
+    sendComment(comment).then(res => {
+      if (res.status === 200 && res.data.code === 0) {
+        const commentlist = state.commentlist.concat(res.data.data)
+        commit(types.SET_COMMENT_LIST, commentlist)
+        resolve(res)
+      }
+    })
+  })
+}
+
+const _getAllComments = function ({commit, state}, {id}) {
+  // 获取文章评论列表
+  return new Promise((resolve, reject) => {
+    getAllComments(id).then(res => {
+      if (res.status === 200 && res.data.code === 0) {
+        commit(types.SET_COMMENT_LIST, res.data.data)
+      }
     })
   })
 }
@@ -92,5 +117,7 @@ export {
   _updataUserInfo,
   _getUserInfo,
   userLogin,
-  _getPoetryDetail
+  _getPoetryDetail,
+  sendArtComment,
+  _getAllComments
 }
