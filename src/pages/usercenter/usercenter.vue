@@ -10,7 +10,7 @@
       <p class="base"><span>用户邮箱：</span><span>{{userinfo.email}}</span></p>
       <div class="desc" v-if="userinfo.user_info">
         <p class="manifesto">用户宣言：</p>
-        <p v-for="list in userinfo.user_info.split('\n').map(v => {
+       <p v-for="list in userinfo.user_info.split('\n').map(v => {
           return v
         })">{{list}}</p>
       </div>

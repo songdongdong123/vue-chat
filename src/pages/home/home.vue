@@ -15,11 +15,11 @@
     >
       <ul>
         <li class="poetryitem" v-for="(list, index) in getPoetryList" :key="index" @click="toPoetryDetail(list)">
-          <div class="poetrycontainer">
-            <div v-for="(item, ind) in list.content.split('\n').map(v => {
-              return v
-            })" :key="ind">{{item}}</div>
-          </div>
+            <div class="poetrycontainer">
+              <div v-for="(item, ind) in list.content.split('\n').map(v => {
+                return v
+              })" :key="ind">{{item}}</div>
+            </div>
             <div class="recomend">
               <p>
                 <span class="icon icon-day">
@@ -33,7 +33,7 @@
       </ul>
     </scroll>
     <div class="bottom" @click="showpoetrycontainer">
-      <p>发表此时此刻~~</p>
+      <p>发表情书</p>
     </div>
   </div>
 </template>
