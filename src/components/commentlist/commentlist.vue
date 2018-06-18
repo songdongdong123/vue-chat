@@ -11,11 +11,13 @@
             <!-- <span class="icon-dianzan"></span> -->
           </p>
           <p class="time">46分钟前</p>
-          <p class="conent" v-for="item in list.guest_count.split('\n').map(v =>{
-             return v
-          })">
-            {{item}}
-          </p>
+          <div v-if="commentlist">
+            <p class="conent" v-for="item in list.guest_count.split('\n').map(v =>{
+              return v
+            })">
+              {{item}}
+            </p>
+          </div>
         </div>
       </li>
     </ul>
