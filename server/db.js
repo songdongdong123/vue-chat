@@ -6,45 +6,56 @@ const sequelize = new Sequelize(
   {
       'dialect': 'mysql',  // 数据库使用mysql
       'host': 'localhost', // 数据库服务器ip
-      'port': 3307,        // 数据库服务器端口
+      'port': 3306,        // 数据库服务器端口
       'define': {
           // 字段以下划线（_）来分割（默认是驼峰命名风格）
           'underscored': true
       }
   }
 );
-
-const poetrylist = sequelize.define(
-  'poetrylist',
+// 用户列表
+const account = sequelize.define(
+  // tablename
+  'account',
   {
-    'content': {
-      'type': Sequelize.TEXT,
-      'allowNull': false
-    },
-    'create_temp': {
+    'user_name': {
       'type': Sequelize.STRING,
       'allowNull': false
     },
-    'star': {
-      'type': Sequelize.BIGINT,
+    'pwd': {
+      'type': Sequelize.STRING,
       'allowNull': false
     },
-    'recommend': {
-      'type': Sequelize.BIGINT,
-      'allowNull': false
+    'email': {
+      'type': Sequelize.STRING,
+      'allowNull': true
     },
-    'poetrylist_id': {
-      'type': Sequelize.CHAR(64),
-      'allowNull': false
+    'avatar': {
+      'type': Sequelize.STRING,
+      'allowNull': true
+    },
+    'user_info': {
+      'type': Sequelize.STRING,
+      'allowNull': true
     },
     'user_id': {
-    'type': Sequelize.STRING,
-    'allowNull': false
+      'type': Sequelize.CHAR(64),
+      'allowNull': false,
+      'unique': true
+    },
+    'create_temp': {
+      'type': Sequelize.DATE,
+      'defaultValue': Sequelize.NOW,
+    },
+    'user_fans': {
+      'type': Sequelize.INTEGER,
+      'allowNull': true
     }
   }
 )
-poetrylist.sync();
+account.sync();
 
+// 评论列表
 const guestbook = sequelize.define(
   'guestbook',
   {
@@ -76,49 +87,40 @@ const guestbook = sequelize.define(
 )
 guestbook.sync();
 
-const account = sequelize.define(
-  // tablename
-  'account',
+// 博文列表
+const poetrylist = sequelize.define(
+  'poetrylist',
   {
-    'user_name': {
-      'type': Sequelize.STRING,
+    'content': {
+      'type': Sequelize.TEXT,
       'allowNull': false
-    },
-    'pwd': {
-      'type': Sequelize.STRING,
-      'allowNull': false
-    },
-    'email': {
-      'type': Sequelize.STRING,
-      'allowNull': true
-    },
-    'avatar': {
-      'type': Sequelize.STRING,
-      'allowNull': true
-    },
-    'user_info': {
-      'type': Sequelize.STRING,
-      'allowNull': true
-    },
-    'user_id': {
-      'type': Sequelize.CHAR(64),
-      'allowNull': false,
-      'unique': true
     },
     'create_temp': {
       'type': Sequelize.STRING,
-      'allowNull': false,
-      'unique': true
+      'allowNull': false
     },
-    'user_fans': {
-      'type': Sequelize.INTEGER,
-      'allowNull': true
+    'star': {
+      'type': Sequelize.BIGINT,
+      'allowNull': false
+    },
+    'recommend': {
+      'type': Sequelize.BIGINT,
+      'allowNull': false
+    },
+    'poetrylist_id': {
+      'type': Sequelize.CHAR(64),
+      'allowNull': false
+    },
+    'user_id': {
+    'type': Sequelize.STRING,
+    'allowNull': false
     }
   }
 )
-account.sync();
+poetrylist.sync();
 
-guestbook.belongsTo(account,{as: 'user_id'});
+// account
+// account.hasMany(guestbook,{foreignKey: 'user_id', targetKey: 'user_id'});
 
 
 

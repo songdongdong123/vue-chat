@@ -6,6 +6,8 @@ const sequelize = require('./db')
 const account = sequelize.model('account')
 const poetrylist = sequelize.model('poetrylist')
 const guestbook = sequelize.model('guestbook')
+account.hasMany(guestbook,{foreignKey: 'user_id', targetKey: 'user_id'});
+guestbook.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 
 const utility  = require('utility')
 
@@ -186,7 +188,8 @@ Router.post('/searchPoetryDetail', function(req, res) {
 Router.post('/sendComment', function (req, res) {
   // 发表评论
   const data = Object.assign({},req.body,{
-    guest_time: Date.now()
+    guest_time: Date.now(),
+    user_id: req.cookies.user_id
   })
   guestbook.create(data).then(doc => {
     return res.json({
@@ -198,7 +201,12 @@ Router.post('/sendComment', function (req, res) {
 
 Router.post('/getAllComments', function(req, res) {
   const poetrylist_id = req.body.poetrylist_id
-  guestbook.findAll({'where': {'poetrylist_id': poetrylist_id}}).then(doc => {
+  guestbook.findAll({
+    include: [{
+      model: account
+    }],
+    where: {'poetrylist_id': poetrylist_id}
+  }).then(doc => {
     return res.json({
       code: 0,
       data: doc

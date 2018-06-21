@@ -1,11 +1,17 @@
 <template>
-<transition name="fade" v-if="poetryState">
+<transition name="slide" v-if="poetryState">
   <div class="poetry">
     <div class="container">
-      <textarea name="" id="" cols="30" rows="5" v-model="content"></textarea>
-      <div class="bottom">
-        <p class="close" @click="closeThis">取消</p>
-        <p class="submit" @click="submitpoetry">发表</p>
+      <div class="title">
+        <span class="icon-fanhui" @click="closeThis"></span>
+        <span class="send" @click="submitpoetry">发送</span>
+      </div>
+      <div class="textarea">
+        <textarea 
+        v-on:input="autoHeight" 
+        placeholder="请输入你想说的话" 
+        ref="textarea"
+        v-model="content"></textarea>
       </div>
     </div>
   </div>
@@ -51,6 +57,9 @@
           })
         }
       },
+      autoHeight ($e) {
+        this.$refs.textarea.style.height = $e.target.scrollHeight + 'px'
+      },
       closeThis () {
         this.$emit('hidepoetrycontainer')
       },
@@ -62,62 +71,43 @@
 </script>
 
 <style lang="stylus" scoped>
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
-  }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
-  }
+  .slide-enter-active,.slide-leave-active
+    transition: all .5s
+  .slide-enter
+    transform: translate3d(100%, 0, 0)
+    opacity:1
+  .slide-leave-to
+    transform: translate3d(100%, 0, 0)
   .poetry
-    position:fixed
+    position:absolute
     width:100%
     height:100%
-    display:flex
-    justify-content:center
-    align-items:center
     z-index:2000
-    background:rgba(0,0,0,.6)
+    background:#fff
     top:0
     .container
-      width:350px
-      height:300px
       margin: auto 0
       border-radius:10px
       background:#fff
-      display:flex
-      justify-content:center
       position: relative
-      textarea
-        text-align:center
-        width:300px
-        height:150px
-        overflow-y:hidden 
-        border:1px solid #331Caa
-        padding:10px
-        margin-top: 50px
-        border-radius: 5px
-      .bottom
-        position:absolute
-        width:80%
-        bottom:30px
-        border-radius:10px
+      .title
+        height:50px
+        border-bottom:1px solid #ccc
         display:flex
         justify-content:space-between
-        .close
-          width:100px
-          height:40px
-          border-radius:10px
-          text-align:center
-          line-height:40px
-          border:1px solid #331Caa
-          box-sizing:border-box
-          color:#331Caa
-        .submit
-          width:100px
-          height:40px
-          border-radius:10px
-          background:#331Caa
-          text-align:center
-          line-height:40px
-          color:#fff
+        align-items:center
+        padding:0 15px
+        .icon-fanhui
+          font-size:20px
+        .send
+          color:#1b9af4
+    .textarea
+      height:600px
+      overflow-y:auto
+      textarea
+        box-sizing:border-box
+        padding:10px
+        width:100%
+        border:none
+        height:auto
 </style>
