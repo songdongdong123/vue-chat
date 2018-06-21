@@ -176,6 +176,7 @@
       // margin:auto 15px
       margin-top:65px
       color:#fff
+      font-size:15px
       .scrollcontainer
         .userinfo
           padding:0 15px

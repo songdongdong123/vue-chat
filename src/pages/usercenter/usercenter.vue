@@ -6,10 +6,10 @@
     <div class="img">
       <img :src="require(`../../assets/avater/${userinfo.avatar}.jpg`)" alt="" v-if="userinfo.avatar">
       <img :src="require(`../../assets/avater/${1}.jpg`)" alt="" v-else>
-      <p class="base"><span>用户昵称：</span><span>{{userinfo.user_name}}</span></p>
-      <p class="base"><span>用户邮箱：</span><span>{{userinfo.email}}</span></p>
+      <p class="base"><span>昵称：</span><span>{{userinfo.user_name}}</span></p>
+      <p class="base"><span>邮箱：</span><span>{{userinfo.email}}</span></p>
       <div class="desc" v-if="userinfo.user_info">
-        <p class="manifesto">用户宣言：</p>
+        <p class="manifesto">简介：</p>
        <p v-for="list in userinfo.user_info.split('\n').map(v => {
           return v
         })">{{list}}</p>
@@ -55,12 +55,12 @@
     min-height:100vh
     .title
       text-align:center
-      color:#fff
+      // color:#fff
       height:45px
       line-height:45px
     .img
       text-align: center
-      color:#fff
+      // color:#fff
       img
         width:100px
         height:100px
@@ -71,10 +71,10 @@
         display:flex
         margin-top:20px
       p>span:nth-child(1)
-        width:80px  
+        width:50px  
       .desc
         p
-          margin-left:100px
+          margin-left:70px
           margin-top: 20px
         .manifesto
           margin:auto 20px
@@ -83,10 +83,10 @@
       margin:auto 50px
       text-align:center
       margin-top: 100px
-      border:1px solid #fff
+      border:1px solid #ccc
       height:45px
       line-height:45px
       border-radius:5px
-      color:#fff
+      // color:#fff
 </style>
 

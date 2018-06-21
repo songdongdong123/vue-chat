@@ -33,7 +33,7 @@ export default {
     top:0
     left:0
     z-index: 1000
-    border-bottom:1px dashed #999
+    border-bottom:1px solid #ccc
     .titlecontainer
       position: relative
       .icon
@@ -42,4 +42,5 @@ export default {
         right:0
         width:50px
         font-size 24px
+        color:#fff
 </style>

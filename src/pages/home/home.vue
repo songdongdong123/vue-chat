@@ -19,7 +19,6 @@
               <div v-for="(item, ind) in list.content.split('\n').map(v => {
                 return v
               })" :key="ind">{{item}}</div>
-            </div>
             <div class="recomend">
               <p>
                 <span class="icon icon-day">
@@ -28,6 +27,7 @@
               <p @click.stop="_linkPoetry(list, index)">
                 <span class="icon icon-dianzan" :class="{'icon_animation': animationstate}"></span>
                 {{list.recommend}}</p>
+            </div>
             </div>
         </li>
       </ul>
@@ -150,8 +150,6 @@ export default {
     }
   }
   .home
-    color:#fff
-    // background:$color-bgcolor
     min-height:100vh
     position:fixed
     width:100%
@@ -160,17 +158,15 @@ export default {
       position:absolute
       width:100%
       height:75%
+      color:#fff
       .poetryitem
-        text-align:center
         line-height:30px
         .poetrycontainer
-          border:1px dashed #fff
+          box-sizing:border-box
           padding:10px
-          margin:auto 20px
-          border-radius:10px
+          padding-left:20px
         .recomend
           display:flex
-          justify-content:center
           margin-top:10px
         .recomend>p:nth-child(1)
           margin-right:50px
@@ -184,6 +180,7 @@ export default {
           .icon_animation
             animation:zanAnimation 2s
     .poetrylist>ul>li:not(:last-child)
+      border-bottom:1px solid #999
       margin-bottom:20px
     .bottom
       position:fixed
@@ -194,5 +191,5 @@ export default {
       color:#fff
       line-height:50px
       text-align:center
-      border-top:1px dashed #999
+      border-top:1px solid #ccc
 </style>

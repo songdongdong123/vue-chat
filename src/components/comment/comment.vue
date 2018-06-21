@@ -41,8 +41,7 @@
         // 发表评论
         let comment = {
           guest_count: this.comment,
-          poetrylist_id: this.$route.query.poetrylist_id,
-          user_id: this.$route.query.user_id
+          poetrylist_id: this.$route.query.poetrylist_id
         }
         this.sendArtComment({comment}).then(res => {
           if (res.status === 200 && res.data.code === 0) {
