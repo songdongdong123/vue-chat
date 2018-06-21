@@ -203,9 +203,11 @@ Router.post('/getAllComments', function(req, res) {
   const poetrylist_id = req.body.poetrylist_id
   guestbook.findAll({
     include: [{
-      model: account
+      model: account,
+      attributes: ['user_name', 'avatar'] // 想要只选择某些属性可以使用 attributes: ['foo', 'bar']
     }],
-    where: {'poetrylist_id': poetrylist_id}
+    where: {'poetrylist_id': poetrylist_id},
+    attributes: ['guest_count', 'guest_time', 'star_num', 'transpond']
   }).then(doc => {
     return res.json({
       code: 0,
