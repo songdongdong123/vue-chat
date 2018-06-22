@@ -7,9 +7,15 @@ import 'common/stylus/index.styl'
 import 'common/stylus/colorreset.styl'
 import { Loading, Toast } from './Plugins/index'
 import { getCookie } from 'common/js/common'
+import * as filters from './common/js/filter'
 Vue.use(Loading)
 Vue.use(Toast)
 Vue.config.productionTip = false
+
+// 引入过滤器
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
 
 router.beforeEach((to, from, next) => {
   if (to.meta.title) {

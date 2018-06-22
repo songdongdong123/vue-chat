@@ -69,11 +69,15 @@ const guestbook = sequelize.define(
     },
     'user_id': {
       'type': Sequelize.STRING,
-      'allowNull': false
+      'allowNull': false,
+      'references': {
+        'model': 'accounts',
+        'key': 'user_id'
+      }
     },
     'guest_time': {
-      'type': Sequelize.STRING,
-      'allowNull': false
+      'type': Sequelize.DATE,
+      'defaultValue': Sequelize.NOW
     },
     'star_num': {
       'type': Sequelize.BIGINT,
@@ -96,8 +100,8 @@ const poetrylist = sequelize.define(
       'allowNull': false
     },
     'create_temp': {
-      'type': Sequelize.STRING,
-      'allowNull': false
+      'type': Sequelize.DATE,
+      'defaultValue': Sequelize.NOW
     },
     'star': {
       'type': Sequelize.BIGINT,
@@ -112,8 +116,12 @@ const poetrylist = sequelize.define(
       'allowNull': false
     },
     'user_id': {
-    'type': Sequelize.STRING,
-    'allowNull': false
+      'type': Sequelize.STRING,
+      'allowNull': false,
+      'references': {
+        'model': 'accounts',
+        'key': 'user_id'
+      }
     }
   }
 )

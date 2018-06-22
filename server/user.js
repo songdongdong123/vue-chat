@@ -8,6 +8,8 @@ const poetrylist = sequelize.model('poetrylist')
 const guestbook = sequelize.model('guestbook')
 account.hasMany(guestbook,{foreignKey: 'user_id', targetKey: 'user_id'});
 guestbook.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
+account.hasMany(poetrylist,{foreignKey: 'user_id', targetKey: 'user_id'});
+poetrylist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 
 const utility  = require('utility')
 
@@ -15,7 +17,7 @@ Router.get('/test', function (req, res) {
   return res.json({
     code: 1,
     arr: [{
-      name: 123
+      name: 1231
     }]
   })
 })
@@ -62,18 +64,14 @@ Router.post('/updataUserInfo', function(req,res) {
 Router.post('/getUserInfo', function(req,res) {
   // 完善用户信息
   const user_id = req.cookies.user_id
-  account.findOne({'where': {'user_id': user_id}}).then((doc) => {
+  account.findOne({
+    'where': {'user_id': user_id},
+    attributes: ['user_name','email', 'avatar', 'user_info', 'create_temp']
+  }).then((doc) => {
     // 过滤用户信息
-    const {email, user_info, user_name, avatar} = doc
-    const userinfo = {
-      email: email,
-      user_info: user_info,
-      user_name: user_name,
-      avatar: avatar
-    }
     return res.json({
       code: 0,
-      data: userinfo
+      data: doc
     })
   })
 })
@@ -119,16 +117,35 @@ Router.post('/addPoetryItem', function(req, res) {
     user_id: req.cookies.user_id
   },body)
   poetrylist.create(data).then(doc => {
-    return res.json({
-      code: 0,
-      data: doc
+    account.findOne({
+      'where': {'user_id':req.cookies.user_id},
+      attributes: ['user_name', 'avatar']
+    }).then(ret => {
+      return res.json({
+        code: 0,
+        data: {
+          account: ret,
+          content: doc.content,
+          create_temp: doc.create_temp,
+          poetrylist_id: doc.poetrylist_id,
+          recommend: doc.recommend,
+          star: doc.star,
+          user_id: doc.user_id
+        }
+      })
     })
   })
 })
 
 Router.get('/getPoetryList', function(req, res) {
   // 获取全部骚话
-  poetrylist.findAll({}).then((doc) => {
+  poetrylist.findAll({
+    include: [{
+      model: account,
+      attributes: ['user_name', 'avatar'] // 想要只选择某些属性可以使用 attributes: ['foo', 'bar']
+    }],
+    attributes: ['content', 'poetrylist_id', 'recommend', 'star', 'user_id', 'create_temp']
+  }).then((doc) => {
     return res.json({
       code: 0,
       data: doc

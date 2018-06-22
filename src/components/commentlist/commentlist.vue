@@ -3,14 +3,14 @@
     <ul class="list">
       <li class="item" v-for="list in commentlist">
         <div class="avater">
-          <img :src="require(`../../assets/avater/1.jpg`)" alt="">
+          <img :src="require(`../../assets/avater/${list.account.avatar}.jpg`)" alt="">
         </div>
         <div class="itemmsg">
           <p class="name">
-            <span>吃番茄会死的咸鱼</span>
+            <span>{{list.account.user_name}}</span>
             <!-- <span class="icon-dianzan"></span> -->
           </p>
-          <p class="time">46分钟前</p>
+          <p class="time">{{list.guest_time|forMatDate}}</p>
           <div v-if="commentlist">
             <p class="conent" v-for="item in list.guest_count.split('\n').map(v =>{
               return v

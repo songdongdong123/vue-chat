@@ -22,7 +22,7 @@
               alt="">
             <p class="info">
               <span>{{userinfo.user_name}}</span>
-              <span>10:57</span>
+              <span>{{poetrydetail.create_temp|forMatDate}}</span>
             </p>
           </div>
         </div>
