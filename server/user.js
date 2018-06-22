@@ -99,8 +99,8 @@ Router.get('/cleardata', function(req,res) {
 Router.post('/linkPoetry', function(req, res) {
   // 点赞骚话
   const num = req.body.num
-  const id = req.body.id
-  poetrylist.update({recommend: num},{'where':{id: id}}).then(doc => {
+  const user_id = req.cookies.user_id
+  poetrylist.update({recommend: num},{'where':{'user_id': user_id}}).then(doc => {
     return res.json({
       code: 0,
       data: num
@@ -144,7 +144,7 @@ Router.get('/getPoetryList', function(req, res) {
       model: account,
       attributes: ['user_name', 'avatar'] // 想要只选择某些属性可以使用 attributes: ['foo', 'bar']
     }],
-    attributes: ['content', 'poetrylist_id', 'recommend', 'star', 'user_id', 'create_temp']
+    attributes: ['content', 'poetrylist_id', 'recommend', 'star', 'user_id', 'create_temp', 'guest_num']
   }).then((doc) => {
     return res.json({
       code: 0,
@@ -177,23 +177,15 @@ Router.post('/login', function(req, res) {
 
 Router.post('/searchPoetryDetail', function(req, res) {
   const {user_id, poetrylist_id} = req.body
-  account.findOne({'where': {'user_id': user_id}}).then(doc => {
-    const userinfo = {
-      avatar: doc.avatar,
-      user_fans: doc.user_fans,
-      user_info: doc.user_info,
-      user_name: doc.user_name,
-      create_temp: doc.create_temp
-    }
-    poetrylist.findOne({'where': {'poetrylist_id':poetrylist_id}}).then(doc => {
-      const poetrydetail = {
-        content: doc.content,
-        create_temp: doc.create_temp,
-        recommend: doc.recommend,
-        star: doc.star,
-        poetrylist_id: doc.poetrylist_id
-      }
-      const datas = Object.assign({},{userinfo},{poetrydetail})
+  account.findOne({
+    'where': {'user_id': user_id},
+    attributes: ['avatar', 'user_fans', 'user_info', 'user_name', 'create_temp']
+  }).then(doc => {
+    poetrylist.findOne({
+      'where': {'poetrylist_id':poetrylist_id},
+      attributes: ['content', 'create_temp', 'recommend', 'star', 'poetrylist_id']
+    }).then(ret => {
+      const datas = Object.assign({},{doc},{ret})
       return res.json({
         code: 0,
         data: datas
@@ -208,10 +200,19 @@ Router.post('/sendComment', function (req, res) {
     guest_time: Date.now(),
     user_id: req.cookies.user_id
   })
+  const poetrylist_id = req.body.poetrylist_id
+  const guest_num = req.body.guest_num
   guestbook.create(data).then(doc => {
-    return res.json({
-      code: 0,
-      data: doc
+    poetrylist.update(
+      {'guest_num': guest_num},
+      {'where':{
+        'poetrylist_id': poetrylist_id
+      }}).then(ret => {
+        return res.json({
+          code: 0,
+          data: doc,
+          ret: ret
+        })
     })
   })
 })

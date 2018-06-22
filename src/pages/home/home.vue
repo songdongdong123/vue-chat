@@ -104,8 +104,7 @@ export default {
       // 点赞
       if (this.cookie) {
         linkPoetry({
-          num: Number(Number(list.recommend) + 1),
-          id: Number(list.id)
+          num: Number(Number(list.recommend) + 1)
         }).then(res => {
           let getPoetryList = JSON.parse(JSON.stringify(this.getPoetryList))
           getPoetryList[index].recommend = res.data.data
