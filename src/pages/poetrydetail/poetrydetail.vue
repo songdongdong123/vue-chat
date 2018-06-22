@@ -52,6 +52,7 @@
     </div>
     <comment
       :showstate="showcomment"
+      :guestnum="getcommentlists.length"
       @hidecomment="hidecomment"
     ></comment>
   </div>
@@ -107,8 +108,8 @@
         }
         this._getPoetryDetail({id}).then(res => {
           if (res.status === 200 && res.data.code === 0) {
-            this.poetrydetail = res.data.data.poetrydetail
-            this.userinfo = res.data.data.userinfo
+            this.poetrydetail = res.data.data.ret
+            this.userinfo = res.data.data.doc
           }
         })
       },

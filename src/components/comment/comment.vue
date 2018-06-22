@@ -26,6 +26,10 @@
       showstate: {
         type: Boolean,
         default: false
+      },
+      guestnum: {
+        type: Number,
+        default: 0
       }
     },
     data () {
@@ -41,7 +45,8 @@
         // 发表评论
         let comment = {
           guest_count: this.comment,
-          poetrylist_id: this.$route.query.poetrylist_id
+          poetrylist_id: this.$route.query.poetrylist_id,
+          guest_num: this.guestnum + 1
         }
         this.sendArtComment({comment}).then(res => {
           if (res.status === 200 && res.data.code === 0) {

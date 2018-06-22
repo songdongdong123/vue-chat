@@ -122,6 +122,10 @@ const poetrylist = sequelize.define(
         'model': 'accounts',
         'key': 'user_id'
       }
+    },
+    'guest_num': {
+      'type': Sequelize.BIGINT,
+      'allowNull': true,
     }
   }
 )
