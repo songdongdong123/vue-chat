@@ -36,6 +36,7 @@
       getUserInfo () {
         this._getUserInfo({}).then(res => {
           this.userinfo = res
+          console.log(res)
         })
       },
       toHomePage () {

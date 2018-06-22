@@ -43,7 +43,6 @@
         if (this.content) {
           const item = {
             content: this.content,
-            create_temp: new Date().getTime(),
             star: 0,
             recommend: 0
           }

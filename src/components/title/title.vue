@@ -1,7 +1,7 @@
 <template>
   <div class="title">
     <div class="titlecontainer">
-      <p>三行情书</p>
+      <p>e-bo</p>
       <p class="icon" @click="toUserCenter"><span class="icon-gerenzhongxin"></span></p>
     </div>
   </div>

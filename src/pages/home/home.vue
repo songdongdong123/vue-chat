@@ -15,10 +15,19 @@
     >
       <ul>
         <li class="poetryitem" v-for="(list, index) in getPoetryList" :key="index" @click="toPoetryDetail(list)">
+          <div class="avater">
+            <div class="logo">
+              <img :src="require(`../../assets/avater/${list.account.avatar}.jpg`)" alt="">
+            </div>
+            <div class="userinfo">
+              <p class="username">{{list.account.user_name}}</p>
+              <p class="creattime">{{list.create_temp|forMatDate(list.create_temp)}}</p>
+            </div>
+          </div>
             <div class="poetrycontainer">
-              <div v-for="(item, ind) in list.content.split('\n').map(v => {
+              <p v-for="(item, ind) in list.content.split('\n').map(v => {
                 return v
-              })" :key="ind">{{item}}</div>
+              })" :key="ind">{{item}}</p>
             <div class="recomend">
               <p>
                 <span class="icon icon-day">
@@ -33,7 +42,7 @@
       </ul>
     </scroll>
     <div class="bottom" @click="showpoetrycontainer">
-      <p>发表情书</p>
+      <p>发表</p>
     </div>
   </div>
 </template>
@@ -161,10 +170,36 @@ export default {
       color:#fff
       .poetryitem
         line-height:30px
+        padding:0 20px
+        box-sizing:border-box
+        padding-bottom:10px
+        .avater
+          margin-right:15px
+          display:flex
+          align-items:center
+          height:45px
+          .logo
+            width:40px
+            height:40px
+            img
+              width:40px
+              height:40px
+              border-radius:100%
+          .userinfo
+            font-size:12px
+            margin-left:15px
+            .username
+              font-size:15px
+            .creattime
+              color:#ccc
+            p
+              line-height:20px
         .poetrycontainer
           box-sizing:border-box
-          padding:10px
-          padding-left:20px
+          font-size:15px
+          margin-top:10px
+          p
+           line-height:18px
         .recomend
           display:flex
           margin-top:10px
