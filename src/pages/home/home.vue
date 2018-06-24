@@ -209,8 +209,12 @@ export default {
         .recomend>p:not(:last-child)
           margin-right:30px
         .recomend>p
+          display:flex
+          align-items: center
+          height:25px
           .icon
             font-size:25px
+            margin-right:10px
           .icon-day
             color:$color-meta
           .icon-dianzan

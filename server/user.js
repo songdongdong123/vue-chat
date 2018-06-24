@@ -200,6 +200,7 @@ Router.post('/sendComment', function (req, res) {
     guest_time: Date.now(),
     user_id: req.cookies.user_id
   })
+  console.log(req.cookies)
   const poetrylist_id = req.body.poetrylist_id
   const guest_num = req.body.guest_num
   guestbook.create(data).then(doc => {
