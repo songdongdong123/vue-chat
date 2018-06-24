@@ -30,8 +30,12 @@
               })" :key="ind">{{item}}</p>
             <div class="recomend">
               <p>
-                <span class="icon icon-day">
+                <span class="icon icon-zhuanfa">
                 </span>{{list.star}}
+              </p>
+              <p>
+                <span class="icon icon-feedback"></span>
+                <span>{{list.guest_num}}</span>
               </p>
               <p @click.stop="_linkPoetry(list, index)">
                 <span class="icon icon-dianzan" :class="{'icon_animation': animationstate}"></span>
@@ -202,8 +206,8 @@ export default {
         .recomend
           display:flex
           margin-top:10px
-        .recomend>p:nth-child(1)
-          margin-right:50px
+        .recomend>p:not(:last-child)
+          margin-right:30px
         .recomend>p
           .icon
             font-size:25px
