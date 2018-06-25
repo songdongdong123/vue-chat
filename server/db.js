@@ -6,7 +6,7 @@ const sequelize = new Sequelize(
   {
       'dialect': 'mysql',  // 数据库使用mysql
       'host': 'localhost', // 数据库服务器ip
-      'port': 3307,        // 数据库服务器端口
+      'port': 3306,        // 数据库服务器端口
       'define': {
           // 字段以下划线（_）来分割（默认是驼峰命名风格）
           'underscored': true
@@ -50,10 +50,59 @@ const account = sequelize.define(
     'user_fans': {
       'type': Sequelize.INTEGER,
       'allowNull': true
+    },
+    'attention': {
+      'type': Sequelize.BIGINT,
+      'allowNull': true
+    },
+    'poetry_num': {
+      'type': Sequelize.BIGINT,
+      'allowNull': true
     }
   }
 )
 account.sync();
+
+// 博文列表
+const poetrylist = sequelize.define(
+  'poetrylist',
+  {
+    'content': {
+      'type': Sequelize.TEXT,
+      'allowNull': false
+    },
+    'create_temp': {
+      'type': Sequelize.DATE,
+      'defaultValue': Sequelize.NOW
+    },
+    'star': {
+      'type': Sequelize.BIGINT,
+      'allowNull': true
+    },
+    'recommend': {
+      'type': Sequelize.BIGINT,
+      'allowNull': true
+    },
+    'poetrylist_id': {
+      'type': Sequelize.CHAR(64),
+      'allowNull': false
+    },
+    'user_id': {
+      'type': Sequelize.STRING,
+      'allowNull': false,
+      'references': {
+        'model': 'accounts',
+        'key': 'user_id'
+      }
+    },
+    'guest_num': {
+      'type': Sequelize.BIGINT,
+      'allowNull': true,
+    }
+  }
+)
+poetrylist.sync();
+
 
 // 评论列表
 const guestbook = sequelize.define(
@@ -90,51 +139,6 @@ const guestbook = sequelize.define(
   }
 )
 guestbook.sync();
-
-// 博文列表
-const poetrylist = sequelize.define(
-  'poetrylist',
-  {
-    'content': {
-      'type': Sequelize.TEXT,
-      'allowNull': false
-    },
-    'create_temp': {
-      'type': Sequelize.DATE,
-      'defaultValue': Sequelize.NOW
-    },
-    'star': {
-      'type': Sequelize.BIGINT,
-      'allowNull': false
-    },
-    'recommend': {
-      'type': Sequelize.BIGINT,
-      'allowNull': false
-    },
-    'poetrylist_id': {
-      'type': Sequelize.CHAR(64),
-      'allowNull': false
-    },
-    'user_id': {
-      'type': Sequelize.STRING,
-      'allowNull': false,
-      'references': {
-        'model': 'accounts',
-        'key': 'user_id'
-      }
-    },
-    'guest_num': {
-      'type': Sequelize.BIGINT,
-      'allowNull': true,
-    }
-  }
-)
-poetrylist.sync();
-
-// account
-// account.hasMany(guestbook,{foreignKey: 'user_id', targetKey: 'user_id'});
-
-
 
 sequelize.authenticate().then(() => {
   console.log('Connection has been established successfully.');
