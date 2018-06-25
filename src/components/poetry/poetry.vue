@@ -42,9 +42,7 @@
         // 发表骚话
         if (this.content) {
           const item = {
-            content: this.content,
-            star: 0,
-            recommend: 0
+            content: this.content
           }
           this.setPoetryItem({item})
           this.closeThis()

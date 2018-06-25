@@ -7,8 +7,8 @@ const account = sequelize.model('account')
 const poetrylist = sequelize.model('poetrylist')
 const guestbook = sequelize.model('guestbook')
 account.hasMany(guestbook,{foreignKey: 'user_id', targetKey: 'user_id'});
-guestbook.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 account.hasMany(poetrylist,{foreignKey: 'user_id', targetKey: 'user_id'});
+guestbook.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 poetrylist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 
 const utility  = require('utility')
@@ -66,12 +66,21 @@ Router.post('/getUserInfo', function(req,res) {
   const user_id = req.cookies.user_id
   account.findOne({
     'where': {'user_id': user_id},
-    attributes: ['user_name','email', 'avatar', 'user_info', 'create_temp']
+    attributes: ['user_name', 'avatar', 'user_info', 'user_fans', 'attention', 'poetry_num']
   }).then((doc) => {
-    // 过滤用户信息
-    return res.json({
-      code: 0,
-      data: doc
+    poetrylist.findAll({
+      where: {
+        'user_id': user_id,
+      },
+      attributes: ['content', 'create_temp', 'guest_num','star', 'star', 'recommend']
+    }).then(list => {
+      return res.json({
+        code: 0,
+        data: {
+          user_info: doc,
+          list: list
+        }
+      })
     })
   })
 })
@@ -138,13 +147,15 @@ Router.post('/addPoetryItem', function(req, res) {
 })
 
 Router.get('/getPoetryList', function(req, res) {
-  // 获取全部骚话
+  // 获取文章列表
   poetrylist.findAll({
     include: [{
       model: account,
-      attributes: ['user_name', 'avatar'] // 想要只选择某些属性可以使用 attributes: ['foo', 'bar']
+      attributes: ['user_name', 'avatar', 'user_id'] // 想要只选择某些属性可以使用 attributes: ['foo', 'bar']
     }],
-    attributes: ['content', 'poetrylist_id', 'recommend', 'star', 'user_id', 'create_temp', 'guest_num']
+    attributes: ['content', 'poetrylist_id', 'recommend', 'star', 'user_id', 'create_temp', 'guest_num'],
+    // order: sequelize.literal('max(id) DESC')
+    // sequelize.literal('max(age) DESC')
   }).then((doc) => {
     return res.json({
       code: 0,
@@ -200,20 +211,29 @@ Router.post('/sendComment', function (req, res) {
     guest_time: Date.now(),
     user_id: req.cookies.user_id
   })
-  console.log(req.cookies)
   const poetrylist_id = req.body.poetrylist_id
   const guest_num = req.body.guest_num
-  guestbook.create(data).then(doc => {
-    poetrylist.update(
-      {'guest_num': guest_num},
-      {'where':{
-        'poetrylist_id': poetrylist_id
-      }}).then(ret => {
-        return res.json({
-          code: 0,
-          data: doc,
-          ret: ret
-        })
+  account.findOne({
+    'where': {'user_id': req.cookies.user_id},
+    attributes: ['avatar', 'user_name']
+  }).then(userinfo => {
+    guestbook.create(data).then(doc => {
+      poetrylist.update(
+        {'guest_num': guest_num},
+        {'where':{
+          'poetrylist_id': poetrylist_id
+        }}).then(ret => {
+          const desc = Object.assign({}, {
+            account: {
+              avatar: userinfo.avatar,
+              user_name: userinfo.user_name
+            }
+          }, doc.dataValues)
+          return res.json({
+            code: 0,
+            data: desc
+          })
+      })
     })
   })
 })

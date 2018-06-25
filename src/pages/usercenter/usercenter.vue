@@ -1,22 +1,33 @@
 <template>
   <div class="usercenter">
-    <div class="title">
-      <!-- <p>用户中心</p> -->
+    <div class="titles">
+      <span class="icon-fanhui" @click="toHomePage"></span>
+      <span></span>
     </div>
     <div class="img">
       <img :src="require(`../../assets/avater/${userinfo.avatar}.jpg`)" alt="" v-if="userinfo.avatar">
       <img :src="require(`../../assets/avater/${1}.jpg`)" alt="" v-else>
-      <p class="base"><span>昵称：</span><span>{{userinfo.user_name}}</span></p>
-      <p class="base"><span>邮箱：</span><span>{{userinfo.email}}</span></p>
       <div class="desc" v-if="userinfo.user_info">
-        <p class="manifesto">简介：</p>
-       <p v-for="list in userinfo.user_info.split('\n').map(v => {
-          return v
-        })">{{list}}</p>
+        <p class="base"><span></span><span>{{userinfo.user_name}}</span></p>
+        <p class='info'>简介：{{userinfo.user_info}}</p>
       </div>
     </div>
-    <div class="bottom" @click="toHomePage">
-      <p>返回大厅</p>
+    <div class="somemsg">
+      <div class="msgcontainer">
+        <p class="article">
+          <span>73</span>
+          <span>文章</span>
+        </p>
+        <p class="attention">
+          <span>166</span>
+          <span>关注</span>
+        </p>
+        <p class="fans">
+          <span>47</span>
+          <span>粉丝</span>
+        </p>
+      </div>
+      <p class="edit">编辑个人资料</p>
     </div>
   </div>
 </template>
@@ -30,12 +41,14 @@
       }
     },
     created () {
+      let userId = this.$route.query.user_id
+      console.log(userId)
       this.getUserInfo()
     },
     methods: {
       getUserInfo () {
         this._getUserInfo({}).then(res => {
-          this.userinfo = res
+          this.userinfo = res.user_info
           console.log(res)
         })
       },
@@ -54,40 +67,51 @@
     position:absolute
     width:100%
     min-height:100vh
-    .title
-      text-align:center
-      // color:#fff
+    .titles
       height:45px
       line-height:45px
+      margin:auto 10px
+      font-size:20px
+      color:#fff
     .img
-      text-align: center
-      // color:#fff
+      margin:auto 15px
+      display:flex
+      align-items:center
+      color:#fff
       img
-        width:100px
-        height:100px
+        width:64px
+        height:64px
         border-radius:100%
-      p
-        text-align:left
-        margin:auto 20px
-        display:flex
-        margin-top:20px
-      p>span:nth-child(1)
-        width:50px  
       .desc
+        margin-left:15px
+        .base
+          margin-bottom:15px
+          font-size:20px
+        .info
+          font-size:12px
+    .somemsg
+      display:flex
+      align-items:center
+      justify-content:space-between
+      color:#fff
+      margin:auto 15px
+      margin-top:20px
+      .msgcontainer
+        display:flex
         p
-          margin-left:70px
-          margin-top: 20px
-        .manifesto
-          margin:auto 20px
-          margin-top: 20px
-    .bottom
-      margin:auto 50px
-      text-align:center
-      margin-top: 100px
-      border:1px solid #ccc
-      height:45px
-      line-height:45px
-      border-radius:5px
-      // color:#fff
+          span
+            display:block
+        p>span:not(:last-child)
+          margin-bottom:5px
+      .msgcontainer>p:not(:last-child)
+        margin-right:25px
+      .edit
+        height:32px
+        line-height:30px
+        padding:0 30px
+        border:1px solid #c5c5cc
+        border-radius:3px
+        font-size:14px
+        box-sizing:border-box
 </style>
 
