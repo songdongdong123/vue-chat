@@ -15,19 +15,39 @@
     <div class="somemsg">
       <div class="msgcontainer">
         <p class="article">
-          <span>73</span>
+          <span>{{poetrylist.length}}</span>
           <span>文章</span>
         </p>
         <p class="attention">
-          <span>166</span>
+          <span>{{userinfo.attention}}</span>
           <span>关注</span>
         </p>
         <p class="fans">
-          <span>47</span>
+          <span>{{userinfo.user_fans}}</span>
           <span>粉丝</span>
         </p>
       </div>
       <p class="edit">编辑个人资料</p>
+    </div>
+    <div class="userpoetrylist">
+      <ul class="list">
+        <li class="item" v-for="item in poetrylist">
+          <div class="usermsg">
+            <div class="avater">
+              <img :src="require(`../../assets/avater/${userinfo.avatar}.jpg`)" alt="" v-if="userinfo.avatar">
+            </div>
+            <div class="info">
+              <p>{{userinfo.user_name}}</p>
+              <p>{{item.create_temp|forMatDate}}</p>
+            </div>
+          </div>
+          <div class="poetrycontent">
+            <p v-for="total in item.content.split('\n').map(v => {
+              return v  
+            })">{{total}}</p>
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -37,19 +57,19 @@
   export default {
     data () {
       return {
-        userinfo: {}
+        userinfo: {},
+        poetrylist: []
       }
     },
     created () {
-      let userId = this.$route.query.user_id
-      console.log(userId)
+      // let userId = this.$route.query.user_id
       this.getUserInfo()
     },
     methods: {
       getUserInfo () {
         this._getUserInfo({}).then(res => {
           this.userinfo = res.user_info
-          console.log(res)
+          this.poetrylist = res.list
         })
       },
       toHomePage () {
@@ -113,5 +133,30 @@
         border-radius:3px
         font-size:14px
         box-sizing:border-box
+    .userpoetrylist
+      color:#fff
+      margin-top:20px
+      .list
+        margin:auto 15px
+        .item
+          .usermsg
+            display:flex
+            align-items:center
+            .avater
+              width:35px
+              height:35px
+              img
+                border-radius:100%
+                width:100%
+                height:100%
+            .info
+              margin-left:10px
+          .poetrycontent
+            margin-top:10px
+            font-size:13px
+            p
+              line-height:20px
+      .list>li:not(:last-child)
+        margin-bottom:20px
 </style>
 

@@ -68,17 +68,15 @@ Router.post('/getUserInfo', function(req,res) {
     'where': {'user_id': user_id},
     attributes: ['user_name', 'avatar', 'user_info', 'user_fans', 'attention', 'poetry_num']
   }).then((doc) => {
-    poetrylist.findAll({
-      where: {
-        'user_id': user_id,
-      },
-      attributes: ['content', 'create_temp', 'guest_num','star', 'star', 'recommend']
-    }).then(list => {
+    sequelize.query(
+      "select `id`,`content`, `create_temp`, `guest_num`, `recommend`,`star` from `poetrylists` where `user_id` = :user order by `create_temp` desc",
+      { replacements: { user: user_id }}
+    ).spread((results, metadata) => {
       return res.json({
         code: 0,
         data: {
           user_info: doc,
-          list: list
+          list: metadata
         }
       })
     })
@@ -153,9 +151,10 @@ Router.get('/getPoetryList', function(req, res) {
       model: account,
       attributes: ['user_name', 'avatar', 'user_id'] // 想要只选择某些属性可以使用 attributes: ['foo', 'bar']
     }],
-    attributes: ['content', 'poetrylist_id', 'recommend', 'star', 'user_id', 'create_temp', 'guest_num'],
-    // order: sequelize.literal('max(id) DESC')
-    // sequelize.literal('max(age) DESC')
+    attributes: ['content', 'poetrylist_id', 'recommend', 'star', 'user_id', 'create_temp', 'guest_num', 'id'],
+    order: [
+      ['create_temp', 'DESC'],
+    ]
   }).then((doc) => {
     return res.json({
       code: 0,
