@@ -13,40 +13,14 @@
       ref="content"
       class="poetrylist"
     >
-      <ul>
-        <li class="poetryitem" v-for="(list, index) in getPoetryList" :key="index" @click="toPoetryDetail(list)">
-          <div class="avater">
-            <div class="logo">
-              <img :src="require(`../../assets/avater/${list.account.avatar}.jpg`)" alt="">
-            </div>
-            <div class="userinfo">
-              <p class="username">{{list.account.user_name}}</p>
-              <p class="creattime">{{list.create_temp|forMatDate(list.create_temp)}}</p>
-            </div>
-          </div>
-            <div class="poetrycontainer">
-              <p v-for="(item, ind) in list.content.split('\n').map(v => {
-                return v
-              })" :key="ind">{{item}}</p>
-            <div class="recomend">
-              <p>
-                <span class="icon icon-zhuanfa">
-                </span>{{list.star}}
-              </p>
-              <p>
-                <span class="icon icon-feedback"></span>
-                <span>{{list.guest_num}}</span>
-              </p>
-              <p @click.stop="_linkPoetry(list, index)">
-                <span class="icon icon-dianzan" :class="{'icon_animation': animationstate}"></span>
-                {{list.recommend}}</p>
-            </div>
-            </div>
-        </li>
-      </ul>
+      <div>
+        <poetrylistcompent
+          :datalist="getPoetryList"
+        ></poetrylistcompent>
+      </div>
     </scroll>
-    <div class="bottom" @click="showpoetrycontainer">
-      <p>发表</p>
+    <div class="send" @click="showpoetrycontainer">
+      <span class="icon-fabiao"></span>
     </div>
   </div>
 </template>
@@ -56,8 +30,7 @@ import { mapGetters, mapActions, mapMutations } from 'vuex'
 import Title from '@/components/title/title'
 import scroll from '@/components/scroll/scroll'
 import poetry from '@/components/poetry/poetry'
-import particle from '@/components/particle/particle'
-import { linkPoetry } from 'api/home'
+import poetrylistcompent from '@/components/poetrylist/poetrylist'
 import { getCookie } from 'common/js/common'
 export default {
   data () {
@@ -86,7 +59,7 @@ export default {
       console.log('上拉加载')
     },
     showpoetrycontainer () {
-      // 显示发表输入框
+      // 发表文章
       if (this.cookie) {
         this.poetrystate = !this.poetrystate
       } else {
@@ -99,30 +72,6 @@ export default {
     },
     _getPoetryList () {
       this.poetryList()
-    },
-    toPoetryDetail (list) {
-      // 文章详情
-      this.$router.push({path: '/poetrydetail', query: {poetrylist_id: list.poetrylist_id, user_id: list.user_id}})
-    },
-    _linkPoetry (list, index) {
-      // 点赞
-      let number = list.recommend ? list.recommend : 0
-      if (this.cookie) {
-        linkPoetry({
-          num: Number(Number(number) + 1)
-        }).then(res => {
-          let getPoetryList = JSON.parse(JSON.stringify(this.getPoetryList))
-          getPoetryList[index].recommend = res.data.data
-          this.updatapoetrylist(getPoetryList)
-        })
-      } else {
-        this.$toast({
-          state: true,
-          desc: '登录之后才能点赞哦~~',
-          duration: 1000
-        })
-        this.$router.push({path: '/login'})
-      }
     },
     _zan () {
       this.animationstate = true
@@ -148,7 +97,7 @@ export default {
     Title,
     scroll,
     poetry,
-    particle
+    poetrylistcompent
   }
 }
 </script>
@@ -225,14 +174,16 @@ export default {
     .poetrylist>ul>li:not(:last-child)
       border-bottom:1px solid #999
       margin-bottom:20px
-    .bottom
+    .send
       position:fixed
-      bottom:0
-      height:50px
-      background:#331Caa
-      width:100%
+      bottom:30px
+      right:15px
       color:#fff
-      line-height:50px
+      width:50px
+      height:50px
+      background:rgba(27,154,244,0.8)
       text-align:center
-      border-top:1px solid #ccc
+      line-height:50px
+      border-radius:100%
+      font-size:22px
 </style>

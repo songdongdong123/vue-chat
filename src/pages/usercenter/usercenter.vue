@@ -29,30 +29,14 @@
       </div>
       <p class="edit">编辑个人资料</p>
     </div>
-    <div class="userpoetrylist">
-      <ul class="list">
-        <li class="item" v-for="item in poetrylist">
-          <div class="usermsg">
-            <div class="avater">
-              <img :src="require(`../../assets/avater/${userinfo.avatar}.jpg`)" alt="" v-if="userinfo.avatar">
-            </div>
-            <div class="info">
-              <p>{{userinfo.user_name}}</p>
-              <p>{{item.create_temp|forMatDate}}</p>
-            </div>
-          </div>
-          <div class="poetrycontent">
-            <p v-for="total in item.content.split('\n').map(v => {
-              return v  
-            })">{{total}}</p>
-          </div>
-        </li>
-      </ul>
-    </div>
+    <poetrylistcompent
+      :datalist="poetrylist"
+    ></poetrylistcompent>
   </div>
 </template>
 
 <script>
+  import poetrylistcompent from '../../components/poetrylist/poetrylist'
   import { mapActions } from 'vuex'
   export default {
     data () {
@@ -69,7 +53,15 @@
       getUserInfo () {
         this._getUserInfo({}).then(res => {
           this.userinfo = res.user_info
-          this.poetrylist = res.list
+          let poetrylist = res.list
+          this.poetrylist = poetrylist.map(v => {
+            v.account = {
+              avatar: this.userinfo.avatar,
+              user_id: this.userinfo.user_id,
+              user_name: this.userinfo.user_name
+            }
+            return v
+          })
         })
       },
       toHomePage () {
@@ -78,6 +70,9 @@
       ...mapActions([
         '_getUserInfo'
       ])
+    },
+    components: {
+      poetrylistcompent
     }
   }
 </script>
@@ -133,30 +128,5 @@
         border-radius:3px
         font-size:14px
         box-sizing:border-box
-    .userpoetrylist
-      color:#fff
-      margin-top:20px
-      .list
-        margin:auto 15px
-        .item
-          .usermsg
-            display:flex
-            align-items:center
-            .avater
-              width:35px
-              height:35px
-              img
-                border-radius:100%
-                width:100%
-                height:100%
-            .info
-              margin-left:10px
-          .poetrycontent
-            margin-top:10px
-            font-size:13px
-            p
-              line-height:20px
-      .list>li:not(:last-child)
-        margin-bottom:20px
 </style>
 

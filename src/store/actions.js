@@ -91,7 +91,7 @@ const sendArtComment = function ({commit, state}, {comment}) {
   return new Promise((resolve, reject) => {
     sendComment(comment).then(res => {
       if (res.status === 200 && res.data.code === 0) {
-        const commentlist = state.commentlist.concat(res.data.data)
+        const commentlist = [].concat(res.data.data).concat(state.commentlist)
         commit(types.SET_COMMENT_LIST, commentlist)
         resolve(res)
       }

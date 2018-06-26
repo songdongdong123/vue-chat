@@ -7,10 +7,10 @@ const addPoetryItem = params => axios.post('/user/addPoetryItem', params)
 const getPoetryList = params => axios.get('/user/getPoetryList', params)
 
 // 点赞骚话
-const linkPoetry = params => axios.post('/user/linkPoetry', params)
+const linkThisPoetry = params => axios.post('/user/linkThisPoetry', params)
 
 export {
   getPoetryList,
   addPoetryItem,
-  linkPoetry
+  linkThisPoetry
 }

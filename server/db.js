@@ -140,6 +140,36 @@ const guestbook = sequelize.define(
 )
 guestbook.sync();
 
+const supportlist = sequelize.define(
+  'supportlist',
+  {
+    'user_id': {
+      'type': Sequelize.STRING,
+      'allowNull': false
+    },
+    'poetrylist_id': {
+      'type': Sequelize.CHAR(64),
+      'allowNull': false
+    }
+  }
+)
+supportlist.sync();
+
+const attentionlist = sequelize.define(
+  'attentionlist',
+  {
+    'user_id': {
+      'type': Sequelize.STRING,
+      'allowNull': false
+    },
+    'target_id': {
+      'type': Sequelize.STRING,
+      'allowNull': false
+    }
+  }
+)
+attentionlist.sync();
+
 sequelize.authenticate().then(() => {
   console.log('Connection has been established successfully.');
 }).catch(err => {
