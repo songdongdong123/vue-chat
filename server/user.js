@@ -6,6 +6,8 @@ const sequelize = require('./db')
 const account = sequelize.model('account')
 const poetrylist = sequelize.model('poetrylist')
 const guestbook = sequelize.model('guestbook')
+const supportlist = sequelize.model('supportlist')
+const attentionlist = sequelize.model('attentionlist')
 account.hasMany(guestbook,{foreignKey: 'user_id', targetKey: 'user_id'});
 account.hasMany(poetrylist,{foreignKey: 'user_id', targetKey: 'user_id'});
 guestbook.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
@@ -13,14 +15,6 @@ poetrylist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 
 const utility  = require('utility')
 
-Router.get('/test', function (req, res) {
-  return res.json({
-    code: 1,
-    arr: [{
-      name: 1231
-    }]
-  })
-})
 
 Router.post('/register', function(req, res) {
   // 用户注册
@@ -66,12 +60,14 @@ Router.post('/getUserInfo', function(req,res) {
   const user_id = req.cookies.user_id
   account.findOne({
     'where': {'user_id': user_id},
-    attributes: ['user_name', 'avatar', 'user_info', 'user_fans', 'attention', 'poetry_num']
+    attributes: ['user_name', 'avatar', 'user_info', 'user_fans', 'attention', 'poetry_num', 'user_id']
   }).then((doc) => {
-    sequelize.query(
-      "select `id`,`content`, `create_temp`, `guest_num`, `recommend`,`star` from `poetrylists` where `user_id` = :user order by `create_temp` desc",
-      { replacements: { user: user_id }}
-    ).spread((results, metadata) => {
+    poetrylist.findAll({
+      where: {'user_id': user_id},
+      order: [
+        ['create_temp', 'DESC'],
+      ]
+    }).then((metadata) => {
       return res.json({
         code: 0,
         data: {
@@ -103,17 +99,17 @@ Router.get('/cleardata', function(req,res) {
   })
 })
 
-Router.post('/linkPoetry', function(req, res) {
-  // 点赞骚话
-  const num = req.body.num
-  const user_id = req.cookies.user_id
-  poetrylist.update({recommend: num},{'where':{'user_id': user_id}}).then(doc => {
-    return res.json({
-      code: 0,
-      data: num
-    })
-  })
-})
+// Router.post('/linkPoetry', function(req, res) {
+//   // 点赞骚话
+//   const num = req.body.num
+//   const user_id = req.cookies.user_id
+//   poetrylist.update({recommend: num},{'where':{'user_id': user_id}}).then(doc => {
+//     return res.json({
+//       code: 0,
+//       data: num
+//     })
+//   })
+// })
 
 Router.post('/addPoetryItem', function(req, res) {
   // 发表一个骚话
@@ -153,12 +149,34 @@ Router.get('/getPoetryList', function(req, res) {
     }],
     attributes: ['content', 'poetrylist_id', 'recommend', 'star', 'user_id', 'create_temp', 'guest_num', 'id'],
     order: [
-      ['create_temp', 'DESC'],
+      ['create_temp', 'DESC']
     ]
   }).then((doc) => {
-    return res.json({
-      code: 0,
-      data: doc
+    supportlist.findAll({
+      // 获取当前用户的点赞文章的列表
+      where: {
+        "user_id": req.cookies.user_id
+      }
+    }).then(suplist => {
+      // 数据处理
+      for (let i = 0; i < doc.length; i++) {
+        if (suplist.length) {
+          for (let j = 0; j < suplist.length; j++) {
+            if (doc[i].dataValues.poetrylist_id === suplist[j].dataValues.poetrylist_id){
+              doc[i].dataValues.isAttention = true
+            } else {
+              doc[i].dataValues.isAttention = false
+            }
+          }
+        } else {
+          doc[i].dataValues.isAttention = false
+        }
+      }
+      return res.json({
+        code: 0,
+        data: doc,
+        suplist: suplist
+      })
     })
   })
 })
@@ -238,6 +256,7 @@ Router.post('/sendComment', function (req, res) {
 })
 
 Router.post('/getAllComments', function(req, res) {
+  // 获取全部评论
   const poetrylist_id = req.body.poetrylist_id
   guestbook.findAll({
     include: [{
@@ -245,13 +264,46 @@ Router.post('/getAllComments', function(req, res) {
       attributes: ['user_name', 'avatar'] // 想要只选择某些属性可以使用 attributes: ['foo', 'bar']
     }],
     where: {'poetrylist_id': poetrylist_id},
-    attributes: ['guest_count', 'guest_time', 'star_num', 'transpond']
+    attributes: ['guest_count', 'guest_time', 'star_num', 'transpond'],
+    order: [
+      ['guest_time', 'DESC'],
+    ]
   }).then(doc => {
     return res.json({
       code: 0,
       data: doc
     })
   })
+})
+
+Router.post('/linkThisPoetry', function(req, res) {
+  // 点赞文章
+  supportlist.findOne({
+    // 先查找该用户对该文章是否已经点赞过
+    where: {
+      user_id: req.cookies.user_id,
+      poetrylist_id: req.body.poetrylist_id
+    }
+  }).then(doc => {
+    // 服务端限制每个用户对一篇文章只能点赞一次
+    if (!doc) {
+      supportlist.create({
+        user_id: req.cookies.user_id,
+        poetrylist_id: req.body.poetrylist_id
+      }).then(doc => {
+        return res.json({
+          code: 0,
+          data: 'ok'
+        })
+      })
+    } else {
+      return res.json({
+        code: 1,
+        msg: '不能重复点赞'
+      })
+    }
+  })
+  
 })
 
 // 我们自己对原始的MD5进行复杂度调整
