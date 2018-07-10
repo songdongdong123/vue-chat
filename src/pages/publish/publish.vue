@@ -14,9 +14,9 @@
         v-model="content"></textarea>
       </div>
       <div class="transmit">
-        <div class="userinfo" v-if="transmitPoetry.account">
+        <!-- <div class="userinfo" v-if="transmitPoetry.account">
           <img :src="require(`../../assets/avater/${transmitPoetry.account.avatar}.jpg`)" alt="">
-        </div>
+        </div> -->
         <div class="poetrydesc" v-if="transmitPoetry.account">
           <p class="user">@{{transmitPoetry.account.user_name}}</p>
           <p class="content">{{transmitPoetry.content}}</p>
@@ -47,19 +47,14 @@
     methods: {
       submitpoetry () {
         // 发表骚话
-        if (this.content) {
-          const item = {
-            content: this.content
-          }
-          this.setPoetryItem({item})
-          this.closeThis()
-          this.content = ''
-        } else {
-          this.$toast({
-            state: true,
-            desc: '没有输入任何内容'
-          })
+        const item = {
+          content: this.content,
+          transmit_content: this.transmitPoetry.content,
+          transmit_user_id: this.transmitPoetry.account.user_id,
+          transmit_user_name: this.transmitPoetry.account.user_name
         }
+        this.setPoetryItem({item})
+        this.content = ''
       },
       back () {
         this.$router.back()
@@ -121,7 +116,7 @@
           width:80px
           height:80px
       .poetrydesc
-        margin-left:10px
+        // margin-left:10px
         .user
           color:$color-sky-blue
         .content

@@ -15,9 +15,17 @@
           </div>
         </div>
         <div class="poetrycontainer">
-          <p v-for="(item, ind) in list.content.split('\n').map(v => {
+          <div>
+            <p v-for="(item, ind) in list.content.split('\n').map(v => {
             return v
-          })" :key="ind">{{item}}</p>
+            })" :key="ind">{{item}}</p>
+          </div>
+          <div class="transmit" v-if="list.transmit_content">
+            <span class="aite">@{{list.transmit_user_name}}</span>
+            <p v-for="(item, ind) in list.transmit_content.split('\n').map(v => {
+            return v
+            })" :key="ind">{{item}}</p>
+          </div>
           <div class="recomend">
             <p @click.stop="transmit(list)">
               <span class="icon icon-zhuanfa">
@@ -129,7 +137,13 @@
           p
            line-height:18px
            font-size:13px
-           color:#ccc
+           color:#fff
+          .transmit
+            p
+              font-size:12px
+              color:#ccc
+            .aite
+              color:rgba(27,154,244,0.8)
         .recomend
           display:flex
           margin-top:10px
