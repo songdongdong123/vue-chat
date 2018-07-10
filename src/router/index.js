@@ -66,6 +66,16 @@ export default new Router({
       meta: {
         title: '用户信息'
       }
+    },
+    {
+      path: '/publish',
+      name: 'publish',
+      component: (resolve) => {
+        require(['@/pages/publish/publish'], resolve)
+      },
+      meta: {
+        title: '转发'
+      }
     }
   ]
 })

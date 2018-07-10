@@ -1,9 +1,9 @@
 <template>
-<transition name="slide" v-if="poetryState">
+<transition name="slide">
   <div class="poetry">
     <div class="container">
       <div class="title">
-        <span class="icon-fanhui" @click="closeThis"></span>
+        <span class="icon-fanhui" @click="back"></span>
         <span class="send" @click="submitpoetry">发送</span>
       </div>
       <div class="textarea">
@@ -13,29 +13,36 @@
         ref="textarea"
         v-model="content"></textarea>
       </div>
+      <div class="transmit">
+        <div class="userinfo" v-if="transmitPoetry.account">
+          <img :src="require(`../../assets/avater/${transmitPoetry.account.avatar}.jpg`)" alt="">
+        </div>
+        <div class="poetrydesc" v-if="transmitPoetry.account">
+          <p class="user">@{{transmitPoetry.account.user_name}}</p>
+          <p class="content">{{transmitPoetry.content}}</p>
+        </div>
+      </div>
     </div>
   </div>
 </transition>
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex'
+  import { mapActions } from 'vuex'
+  import { getPoetryBrief } from 'api/poetry'
   export default {
-    props: {
-      poetryState: {
-        type: Boolean,
-        default: false
-      }
-    },
     data () {
       return {
-        content: ''
+        content: '',
+        transmitPoetry: {}
       }
     },
-    computed: {
-      ...mapGetters([
-        'getPoetryItem'
-      ])
+    created () {
+      getPoetryBrief({
+        poetrylist_id: this.$route.query.poetrylist_id
+      }).then(res => {
+        this.transmitPoetry = res.data.data
+      })
     },
     methods: {
       submitpoetry () {
@@ -54,11 +61,11 @@
           })
         }
       },
+      back () {
+        this.$router.back()
+      },
       autoHeight ($e) {
         this.$refs.textarea.style.height = $e.target.scrollHeight + 'px'
-      },
-      closeThis () {
-        this.$emit('hidepoetrycontainer')
       },
       ...mapActions([
         'setPoetryItem'
@@ -76,10 +83,7 @@
   .slide-leave-to
     transform: translate3d(100%, 0, 0)
   .poetry
-    position:absolute
-    width:100%
-    height:100%
-    z-index:5000
+    min-height:100vh
     background:#fff
     top:0
     .container
@@ -99,7 +103,7 @@
         .send
           color:#1b9af4
     .textarea
-      height:600px
+      min-height:100px
       overflow-y:auto
       textarea
         box-sizing:border-box
@@ -107,4 +111,26 @@
         width:100%
         border:none
         height:auto
+    .transmit
+      margin:auto 15px
+      display:flex
+      align-items:center
+      // justify-content:
+      .userinfo
+        img
+          width:80px
+          height:80px
+      .poetrydesc
+        margin-left:10px
+        .user
+          color:$color-sky-blue
+        .content
+          font-size:13px
+          line-height:20px
+          height:55px
+          display: -webkit-box
+          -webkit-box-orient: vertical
+          -webkit-line-clamp: 3
+          overflow: hidden
+
 </style>
