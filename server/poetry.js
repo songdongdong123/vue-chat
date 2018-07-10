@@ -16,11 +16,12 @@ poetrylist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 const utility  = require('utility')
 
 Router.post('/getPoetryBrief', function(req, res) {
+  // 转发消息内容获取（包括用户信息）
   const poetrylist_id = req.body.poetrylist_id
   poetrylist.findOne({
     include: [{
       model: account,
-      attributes: ['user_name', 'avatar', 'create_temp'] // 想要只选择某些属性可以使用 attributes: ['foo', 'bar']
+      attributes: ['user_name', 'avatar', 'create_temp', 'user_id'] // 想要只选择某些属性可以使用 attributes: ['foo', 'bar']
     }],
     where: {poetrylist_id: poetrylist_id},
     attributes: ['content', 'create_temp']

@@ -87,6 +87,18 @@ const poetrylist = sequelize.define(
       'type': Sequelize.CHAR(64),
       'allowNull': false
     },
+    'transmit_content': {
+      'type': Sequelize.TEXT,
+      'allowNull': true
+    },
+    'transmit_user_id': {
+      'type': Sequelize.CHAR(64),
+      'allowNull': true
+    },
+    'transmit_user_name': {
+      'type': Sequelize.STRING,
+      'allowNull': true
+    },
     'user_id': {
       'type': Sequelize.STRING,
       'allowNull': false,

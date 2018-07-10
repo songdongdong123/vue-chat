@@ -91,7 +91,7 @@ Router.get('/getalluser', function(req,res) {
 
 Router.get('/cleardata', function(req,res) {
   // 清空全部数据
-  poetrylist.destroy({'where':{'id': 13}}).then((doc) => {
+  poetrylist.destroy().then((doc) => {
     return res.json({
       code: 0,
       data: doc
@@ -99,17 +99,6 @@ Router.get('/cleardata', function(req,res) {
   })
 })
 
-// Router.post('/linkPoetry', function(req, res) {
-//   // 点赞骚话
-//   const num = req.body.num
-//   const user_id = req.cookies.user_id
-//   poetrylist.update({recommend: num},{'where':{'user_id': user_id}}).then(doc => {
-//     return res.json({
-//       code: 0,
-//       data: num
-//     })
-//   })
-// })
 
 Router.post('/addPoetryItem', function(req, res) {
   // 发表一个骚话
@@ -147,7 +136,18 @@ Router.get('/getPoetryList', function(req, res) {
       model: account,
       attributes: ['user_name', 'avatar', 'user_id'] // 想要只选择某些属性可以使用 attributes: ['foo', 'bar']
     }],
-    attributes: ['content', 'poetrylist_id', 'recommend', 'star', 'user_id', 'create_temp', 'guest_num', 'id'],
+    attributes: [
+      'content',
+      'poetrylist_id',
+      'recommend',
+      'star',
+      'user_id',
+      'create_temp',
+      'guest_num',
+      'transmit_content',
+      'transmit_user_id',
+      'transmit_user_name',
+      'id'],
     order: [
       ['create_temp', 'DESC']
     ]

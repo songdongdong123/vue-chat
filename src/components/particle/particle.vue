@@ -234,7 +234,7 @@
     position: fixed;
     height:100%;
     width:100%;
-    background:#331Caa;
+    background:#331caa;
     top:0;
     z-index: -1;
   }
