@@ -19,7 +19,7 @@
             return v
           })" :key="ind">{{item}}</p>
           <div class="recomend">
-            <p>
+            <p @click.stop="transmit(list)">
               <span class="icon icon-zhuanfa">
               </span>{{list.star}}
             </p>
@@ -51,6 +51,10 @@
       this.cookie = getCookie('user_id')
     },
     methods: {
+      transmit (list) {
+        // 转发
+        this.$router.push({path: '/publish', query: {poetrylist_id: list.poetrylist_id}})
+      },
       toPoetryDetail (list) {
         // 文章详情
         this.$router.push({path: '/poetrydetail', query: {poetrylist_id: list.poetrylist_id, user_id: list.user_id}})
