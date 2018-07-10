@@ -73,7 +73,13 @@
           linkThisPoetry({
             poetrylist_id: list.poetrylist_id
           }).then(res => {
-            console.log(res)
+            if (res.data.code === 1) {
+              this.$toast({
+                state: true,
+                desc: res.data.msg,
+                duration: 2000
+              })
+            }
           })
         } else {
           this.$toast({

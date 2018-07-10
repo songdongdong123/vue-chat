@@ -160,12 +160,11 @@ Router.get('/getPoetryList', function(req, res) {
     }).then(suplist => {
       // 数据处理
       for (let i = 0; i < doc.length; i++) {
+        doc[i].dataValues.isAttention = false
         if (suplist.length) {
           for (let j = 0; j < suplist.length; j++) {
             if (doc[i].dataValues.poetrylist_id === suplist[j].dataValues.poetrylist_id){
               doc[i].dataValues.isAttention = true
-            } else {
-              doc[i].dataValues.isAttention = false
             }
           }
         } else {
@@ -297,10 +296,20 @@ Router.post('/linkThisPoetry', function(req, res) {
         })
       })
     } else {
-      return res.json({
-        code: 1,
-        msg: '不能重复点赞'
+      supportlist.destroy({
+        where: {
+          'poetrylist_id': req.body.poetrylist_id
+        }
+      }).then(ret => {
+        return res.json({
+          code: 0,
+          data: ret
+        })
       })
+      // return res.json({
+      //   code: 1,
+      //   msg: '不能重复点赞'
+      // })
     }
   })
   
