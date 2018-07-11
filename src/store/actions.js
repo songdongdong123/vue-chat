@@ -18,14 +18,19 @@ const poetryList = function ({commit, state}) {
   })
 }
 
-const setPoetryItem = function ({commit, state}, {item}) {
+const setPoetryItem = function ({commit, state}, {item, star}) {
   // 发表骚话
-  addPoetryItem({item}).then(res => {
-    if (res.status === 200 && res.data.code === 0) {
-      const poetryList = state.poetryList.concat(res.data.data)
-      commit(types.SET_POETRY_ITEM, item)
-      commit(types.SET_POETRY_LIST, poetryList)
-    }
+  return new Promise((resolve, reject) => {
+    addPoetryItem({item, star}).then(res => {
+      if (res.status === 200 && res.data.code === 0) {
+        const poetryList = state.poetryList.concat(res.data.data)
+        commit(types.SET_POETRY_ITEM, item)
+        commit(types.SET_POETRY_LIST, poetryList)
+        resolve(res.data)
+      } else {
+        reject(new Error())
+      }
+    })
   })
 }
 

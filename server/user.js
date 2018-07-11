@@ -91,7 +91,9 @@ Router.get('/getalluser', function(req,res) {
 
 Router.get('/cleardata', function(req,res) {
   // 清空全部数据
-  poetrylist.destroy().then((doc) => {
+  poetrylist.destroy({
+    where: {'id': 5}
+  }).then((doc) => {
     return res.json({
       code: 0,
       data: doc
@@ -104,10 +106,12 @@ Router.post('/addPoetryItem', function(req, res) {
   // 发表一个骚话
   // pwdMd5
   const body = req.body.item
+  const star = req.body.star
   const data = Object.assign({},{
     poetrylist_id: pwdMd5(Date.now()),
     user_id: req.cookies.user_id
   },body)
+  // 根据是否后star这个参数判断是新增的文章还是转发的文章
   poetrylist.create(data).then(doc => {
     account.findOne({
       'where': {'user_id':req.cookies.user_id},
@@ -127,6 +131,24 @@ Router.post('/addPoetryItem', function(req, res) {
       })
     })
   })
+  if (star) {
+    poetrylist.update(
+      {'star': star.star},
+      {'where': {
+        'poetrylist_id': body.transmit_poetrylist_id
+      }}
+    ).then(doc => {
+      account.findOne({
+        'where': {'user_id':req.cookies.user_id},
+        attributes: ['user_name', 'avatar']
+      }).then(ret => {
+        return res.json({
+          code: 0,
+          data: ret
+        })
+      })
+    })
+  }
 })
 
 Router.get('/getPoetryList', function(req, res) {
@@ -149,7 +171,7 @@ Router.get('/getPoetryList', function(req, res) {
       'transmit_user_name',
       'id'],
     order: [
-      ['create_temp', 'DESC']
+      ['create_temp', 'DESC'],
     ]
   }).then((doc) => {
     supportlist.findAll({
@@ -203,6 +225,7 @@ Router.post('/login', function(req, res) {
 })
 
 Router.post('/searchPoetryDetail', function(req, res) {
+  // 查询文章详情
   const {user_id, poetrylist_id} = req.body
   account.findOne({
     'where': {'user_id': user_id},
@@ -258,13 +281,13 @@ Router.post('/getAllComments', function(req, res) {
   // 获取全部评论
   const poetrylist_id = req.body.poetrylist_id
   guestbook.findAll({
-    include: [{
+    include: [{ // 连表查询
       model: account,
       attributes: ['user_name', 'avatar'] // 想要只选择某些属性可以使用 attributes: ['foo', 'bar']
     }],
     where: {'poetrylist_id': poetrylist_id},
     attributes: ['guest_count', 'guest_time', 'star_num', 'transpond'],
-    order: [
+    order: [ // 排序
       ['guest_time', 'DESC'],
     ]
   }).then(doc => {
@@ -290,26 +313,39 @@ Router.post('/linkThisPoetry', function(req, res) {
         user_id: req.cookies.user_id,
         poetrylist_id: req.body.poetrylist_id
       }).then(doc => {
-        return res.json({
-          code: 0,
-          data: 'ok'
+        // 更新点赞数量
+        poetrylist.update(
+          {'recommend': req.body.recommend},
+          {'where': {
+            'poetrylist_id': req.body.poetrylist_id
+          }}
+        ).then(ret => {
+          return res.json({
+            code: 0,
+            data: ret
+          })
         })
       })
     } else {
+      // 取消点赞
       supportlist.destroy({
         where: {
           'poetrylist_id': req.body.poetrylist_id
         }
       }).then(ret => {
-        return res.json({
-          code: 0,
-          data: ret
+        // 更新点赞数量
+        poetrylist.update(
+          {'recommend': req.body.recommend},
+          {'where': {
+            'poetrylist_id': req.body.poetrylist_id
+          }}
+        ).then(ret => {
+          return res.json({
+            code: 0,
+            data: ret
+          })
         })
       })
-      // return res.json({
-      //   code: 1,
-      //   msg: '不能重复点赞'
-      // })
     }
   })
   

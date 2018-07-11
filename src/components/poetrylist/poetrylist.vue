@@ -70,17 +70,35 @@
       _linkPoetry (list, index) {
         // 点赞
         if (this.cookie) {
-          linkThisPoetry({
-            poetrylist_id: list.poetrylist_id
-          }).then(res => {
-            if (res.data.code === 1) {
-              this.$toast({
-                state: true,
-                desc: res.data.msg,
-                duration: 2000
-              })
-            }
-          })
+          if (!list.isAttention) {
+            linkThisPoetry({
+              poetrylist_id: list.poetrylist_id,
+              recommend: list.recommend + 1
+            }).then(res => {
+              // list.isAttention = true
+              // list.recommend = list.recommend + 1
+              if (res.data.code === 1) {
+                this.$toast({
+                  state: true,
+                  desc: res.data.msg,
+                  duration: 2000
+                })
+              }
+            })
+          } else {
+            linkThisPoetry({
+              poetrylist_id: list.poetrylist_id,
+              recommend: list.recommend - 1
+            }).then(res => {
+              if (res.data.code === 1) {
+                this.$toast({
+                  state: true,
+                  desc: res.data.msg,
+                  duration: 2000
+                })
+              }
+            })
+          }
         } else {
           this.$toast({
             state: true,

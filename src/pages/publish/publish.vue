@@ -51,9 +51,17 @@
           content: this.content,
           transmit_content: this.transmitPoetry.content,
           transmit_user_id: this.transmitPoetry.account.user_id,
-          transmit_user_name: this.transmitPoetry.account.user_name
+          transmit_user_name: this.transmitPoetry.account.user_name,
+          transmit_poetrylist_id: this.transmitPoetry.poetrylist_id
         }
-        this.setPoetryItem({item})
+        const star = {
+          star: this.transmitPoetry.star + 1
+        }
+        this.setPoetryItem({item, star}).then(res => {
+          if (res.code === 0) {
+            this.$router.back()
+          }
+        })
         this.content = ''
       },
       back () {
