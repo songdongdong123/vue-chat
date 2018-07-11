@@ -58,7 +58,9 @@
           star: this.transmitPoetry.star + 1
         }
         this.setPoetryItem({item, star}).then(res => {
-          console.log(res)
+          if (res.code === 0) {
+            this.$router.back()
+          }
         })
         this.content = ''
       },

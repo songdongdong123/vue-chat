@@ -75,8 +75,8 @@
               poetrylist_id: list.poetrylist_id,
               recommend: list.recommend + 1
             }).then(res => {
-              list.isAttention = true
-              list.recommend += 1
+              // list.isAttention = true
+              // list.recommend = list.recommend + 1
               if (res.data.code === 1) {
                 this.$toast({
                   state: true,
