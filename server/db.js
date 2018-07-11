@@ -99,6 +99,10 @@ const poetrylist = sequelize.define(
       'type': Sequelize.STRING,
       'allowNull': true
     },
+    'transmit_poetrylist_id': {
+      'type': Sequelize.CHAR(255),
+      'allowNull': true
+    },
     'user_id': {
       'type': Sequelize.STRING,
       'allowNull': false,
