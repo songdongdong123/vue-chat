@@ -1,6 +1,6 @@
 import * as types from './mutation-types'
 import { Loading } from '../Plugins/index'
-import { getPoetryList, addPoetryItem } from 'api/home'
+import { getPoetryList, addPoetryItem, linkThisPoetry } from 'api/home'
 import { register, updataUserInfo, getUserInfo, login } from 'api/account'
 import { getPoetryDetail } from 'api/poetry'
 import { sendComment, getAllComments } from 'api/comment'
@@ -115,6 +115,25 @@ const _getAllComments = function ({commit, state}, {id}) {
   })
 }
 
+const likePoetry = function ({commit, state}, {item}) {
+  return new Promise((resolve, reject) => {
+    linkThisPoetry(item).then(res => {
+      if (res.status === 200 && res.data.code === 0) {
+        const poetryList = JSON.parse(JSON.stringify(state.poetryList))
+        poetryList.map(v => {
+          if (item.poetrylist_id === v.poetrylist_id) {
+            v.recommend = item.recommend
+            v.isAttention = item.isAttention
+          }
+          return v
+        })
+        commit(types.SET_POETRY_LIST, poetryList)
+        resolve(res.data)
+      }
+    })
+  })
+}
+
 export {
   poetryList,
   setPoetryItem,
@@ -124,5 +143,6 @@ export {
   userLogin,
   _getPoetryDetail,
   sendArtComment,
-  _getAllComments
+  _getAllComments,
+  likePoetry
 }

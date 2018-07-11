@@ -46,7 +46,8 @@
 </template>
 
 <script>
-  import { linkThisPoetry } from 'api/home'
+  // import { linkThisPoetry } from 'api/home'
+  import { mapActions } from 'vuex'
   import { getCookie } from 'common/js/common'
   export default {
     props: {
@@ -71,33 +72,19 @@
         // 点赞
         if (this.cookie) {
           if (!list.isAttention) {
-            linkThisPoetry({
+            let item = {
               poetrylist_id: list.poetrylist_id,
-              recommend: list.recommend + 1
-            }).then(res => {
-              // list.isAttention = true
-              // list.recommend = list.recommend + 1
-              if (res.data.code === 1) {
-                this.$toast({
-                  state: true,
-                  desc: res.data.msg,
-                  duration: 2000
-                })
-              }
-            })
+              recommend: list.recommend + 1,
+              isAttention: true
+            }
+            this.upDatePoetrylist({item})
           } else {
-            linkThisPoetry({
+            let item = {
               poetrylist_id: list.poetrylist_id,
-              recommend: list.recommend - 1
-            }).then(res => {
-              if (res.data.code === 1) {
-                this.$toast({
-                  state: true,
-                  desc: res.data.msg,
-                  duration: 2000
-                })
-              }
-            })
+              recommend: list.recommend - 1,
+              isAttention: false
+            }
+            this.upDatePoetrylist({item})
           }
         } else {
           this.$toast({
@@ -107,7 +94,10 @@
           })
           this.$router.push({path: '/login'})
         }
-      }
+      },
+      ...mapActions({
+        upDatePoetrylist: 'likePoetry'
+      })
     }
   }
 </script>
