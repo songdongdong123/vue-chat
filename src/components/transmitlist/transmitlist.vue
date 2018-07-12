@@ -1,7 +1,7 @@
 <template>
-  <div class="commentlist">
+  <div class="transmitlist">
     <ul class="list">
-      <li class="item" v-for="list in commentlist">
+      <li class="item" v-for="list in transmitlist">
         <div class="avater">
           <img :src="require(`../../assets/avater/${list.account.avatar}.jpg`)" alt="">
         </div>
@@ -9,9 +9,9 @@
           <p class="name">
             <span>{{list.account.user_name}}</span>
           </p>
-          <p class="time">{{list.guest_time|forMatDate}}</p>
-          <div v-if="commentlist">
-            <p class="conent" v-for="item in list.guest_count.split('\n').map(v =>{
+          <p class="time">{{list.created_at|forMatDate}}</p>
+          <div v-if="list.content">
+            <p class="conent" v-for="item in list.content.split('\n').map(v =>{
               return v
             })">
               {{item}}
@@ -26,7 +26,7 @@
 <script>
   export default {
     props: {
-      commentlist: {
+      transmitlist: {
         type: Array,
         default: null
       }
@@ -38,11 +38,12 @@
 </script>
 
 <style lang="stylus" scoped>
-  .commentlist
+  .transmitlist
     .list
       .item
         padding: 15px
         display:flex
+        align-items: center;
         border-bottom:1px solid #666
         .avater
           width:40px

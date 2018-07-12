@@ -8,10 +8,13 @@ const poetrylist = sequelize.model('poetrylist')
 const guestbook = sequelize.model('guestbook')
 const supportlist = sequelize.model('supportlist')
 const attentionlist = sequelize.model('attentionlist')
+const transmitlist = sequelize.model('transmitlist')
 account.hasMany(guestbook,{foreignKey: 'user_id', targetKey: 'user_id'});
 account.hasMany(poetrylist,{foreignKey: 'user_id', targetKey: 'user_id'});
+account.hasMany(transmitlist,{foreignKey: 'user_id', targetKey: 'user_id'});
 guestbook.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 poetrylist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
+transmitlist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 
 const utility  = require('utility')
 
@@ -111,7 +114,7 @@ Router.post('/addPoetryItem', function(req, res) {
     poetrylist_id: pwdMd5(Date.now()),
     user_id: req.cookies.user_id
   },body)
-  // 根据是否后star这个参数判断是新增的文章还是转发的文章
+  // 根据是否有star这个参数判断是新增的文章还是转发的文章
   poetrylist.create(data).then(doc => {
     account.findOne({
       'where': {'user_id':req.cookies.user_id},
@@ -132,22 +135,20 @@ Router.post('/addPoetryItem', function(req, res) {
     })
   })
   if (star) {
+    // 存储转发时的评论信息
+    let tramsmitmsg = {
+      poetrylist_id: body.transmit_poetrylist_id,
+      content: body.content,
+      user_id: req.cookies.user_id
+    }
+    transmitlist.create(tramsmitmsg).then(() => {})
+    // 更新文章的转发数量
     poetrylist.update(
       {'star': star.star},
       {'where': {
         'poetrylist_id': body.transmit_poetrylist_id
       }}
-    ).then(doc => {
-      account.findOne({
-        'where': {'user_id':req.cookies.user_id},
-        attributes: ['user_name', 'avatar']
-      }).then(ret => {
-        return res.json({
-          code: 0,
-          data: ret
-        })
-      })
-    })
+    ).then(() => {})
   }
 })
 

@@ -31,14 +31,23 @@
               return v
             })">{{list}}</p>
           <div class="lite">
-            <p>转发<span>{{poetrydetail.star}}</span></p>
-            <p class="comment">评论{{getcommentlists.length}}</p>
-            <p>赞{{poetrydetail.recommend}}</p>
+            <p :class="{'comment': transmitliststate}" @click="getTransmitList">转发<span>{{poetrydetail.star}}</span></p>
+            <p :class="{'comment': commentliststate}" @click="showComment">评论{{getcommentlists.length}}</p>
+            <p :class="{'comment': linkliststate}" @click="showlinklistcomment">赞{{poetrydetail.recommend}}</p>
           </div>
         </div>
         <commentlist
+          v-if="commentliststate"
           :commentlist="getcommentlists"
         ></commentlist>
+        <transmitlist
+          v-if="transmitliststate"
+          :transmitlist="transmitlist"
+        ></transmitlist>
+        <transmitlist
+          v-if="linkliststate"
+          :transmitlist="likeList"
+        ></transmitlist>
       </div>
     </scroll>
     <div class="send">
@@ -63,6 +72,7 @@
   import scroll from '@/components/scroll/scroll'
   import comment from '@/components/comment/comment'
   import commentlist from '@/components/commentlist/commentlist'
+  import transmitlist from '@/components/transmitlist/transmitlist'
   import { mapActions, mapGetters } from 'vuex'
   export default {
     data () {
@@ -73,13 +83,19 @@
         user_id: '',
         poetrylist_id: '',
         showcomment: false,
-        commentlist: []
+        commentliststate: true,
+        transmitliststate: false,
+        linkliststate: false,
+        commentlist: [],
+        transmitlist: [],
+        likeList: []
       }
     },
     components: {
       scroll,
       comment,
-      commentlist
+      commentlist,
+      transmitlist
     },
     computed: {
       ...mapGetters([
@@ -101,7 +117,28 @@
       hidecomment () {
         this.showcomment = false
       },
+      getTransmitList () {
+        // 获取转发列表
+        this._getTransmitList(this.poetrylist_id).then(res => {
+          [this.commentliststate, this.transmitliststate, this.linkliststate] = [false, true, false]
+          this.transmitlist = res.data
+        })
+      },
+      showlinklistcomment () {
+        // 获取点赞列表
+        // 切换到点赞列表
+        this._getSupportList(this.poetrylist_id).then(res => {
+          [this.commentliststate, this.transmitliststate, this.linkliststate] = [false, false, true]
+          this.likeList = res.data
+          console.log(res)
+        })
+      },
+      showComment () {
+        // 切换到评论列表
+        [this.commentliststate, this.transmitliststate, this.linkliststate] = [true, false, false]
+      },
       _getppoetrydetail () {
+        // 获取文章详情
         let id = {
           user_id: this.user_id,
           poetrylist_id: this.poetrylist_id
@@ -114,6 +151,7 @@
         })
       },
       getAllComments () {
+        // 获取评论列表
         let id = {
           poetrylist_id: this.poetrylist_id
         }
@@ -125,7 +163,9 @@
       },
       ...mapActions([
         '_getPoetryDetail',
-        '_getAllComments'
+        '_getAllComments',
+        '_getTransmitList',
+        '_getSupportList'
       ])
     }
   }
