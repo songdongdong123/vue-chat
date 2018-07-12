@@ -2,7 +2,8 @@ import * as types from './mutation-types'
 import { Loading } from '../Plugins/index'
 import { getPoetryList, addPoetryItem, linkThisPoetry } from 'api/home'
 import { register, updataUserInfo, getUserInfo, login } from 'api/account'
-import { getPoetryDetail } from 'api/poetry'
+import { getPoetryDetail, getTransmitList, getSupportList } from 'api/poetry'
+// getTransmitList
 import { sendComment, getAllComments } from 'api/comment'
 const poetryList = function ({commit, state}) {
   // 获取骚话列表
@@ -94,6 +95,7 @@ const _getPoetryDetail = function ({commit, state}, {id}) {
 }
 
 const sendArtComment = function ({commit, state}, {comment}) {
+  // 发表评论
   return new Promise((resolve, reject) => {
     sendComment(comment).then(res => {
       if (res.status === 200 && res.data.code === 0) {
@@ -117,6 +119,7 @@ const _getAllComments = function ({commit, state}, {id}) {
 }
 
 const likePoetry = function ({commit, state}, {item}) {
+  // 点赞
   return new Promise((resolve, reject) => {
     linkThisPoetry(item).then(res => {
       if (res.status === 200 && res.data.code === 0) {
@@ -135,6 +138,32 @@ const likePoetry = function ({commit, state}, {item}) {
   })
 }
 
+const _getTransmitList = function ({commit, state}, poetrylistId) {
+  // 获取当前文章转发列表
+  return new Promise((resolve, reject) => {
+    getTransmitList({
+      poetrylist_id: poetrylistId
+    }).then(res => {
+      if (res.status === 200 && res.data.code === 0) {
+        resolve(res.data)
+      }
+    })
+  })
+}
+
+const _getSupportList = function ({commit, state}, poetrylistId) {
+  // 获取点赞列表
+  return new Promise((resolve, reject) => {
+    getSupportList({
+      poetrylist_id: poetrylistId
+    }).then(res => {
+      if (res.status === 200 && res.data.code === 0) {
+        resolve(res.data)
+      }
+    })
+  })
+}
+
 export {
   poetryList,
   setPoetryItem,
@@ -145,5 +174,7 @@ export {
   _getPoetryDetail,
   sendArtComment,
   _getAllComments,
-  likePoetry
+  likePoetry,
+  _getTransmitList,
+  _getSupportList
 }

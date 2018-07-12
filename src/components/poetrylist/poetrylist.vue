@@ -10,8 +10,8 @@
             <p class="username">{{list.account.user_name}}</p>
             <p class="creattime">{{list.create_temp|forMatDate(list.create_temp)}}</p>
           </div>
-          <div class="keep_attention">
-            <span>+ 关注</span>
+          <div class="keep_attention" @click.stop="testShare">
+            <span>+ 分享</span>
           </div>
         </div>
         <div class="poetrycontainer">
@@ -60,6 +60,12 @@
       this.cookie = getCookie('user_id')
     },
     methods: {
+      testShare () {
+        window.FB.ui({
+          method: 'share',
+          href: 'https://1peso.mx'
+        }, function (response) {})
+      },
       transmit (list) {
         // 转发
         this.$router.push({path: '/publish', query: {poetrylist_id: list.poetrylist_id}})

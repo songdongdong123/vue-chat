@@ -33,7 +33,7 @@
   export default {
     data () {
       return {
-        content: '',
+        content: '转发微博',
         transmitPoetry: {}
       }
     },
