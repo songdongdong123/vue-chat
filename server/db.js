@@ -157,11 +157,16 @@ const guestbook = sequelize.define(
 guestbook.sync();
 
 const supportlist = sequelize.define(
+  // 点赞列表
   'supportlist',
   {
     'user_id': {
       'type': Sequelize.STRING,
-      'allowNull': false
+      'allowNull': false,
+      'references': {
+        'model': 'accounts',
+        'key': 'user_id'
+      }
     },
     'poetrylist_id': {
       'type': Sequelize.CHAR(64),
@@ -172,6 +177,7 @@ const supportlist = sequelize.define(
 supportlist.sync();
 
 const attentionlist = sequelize.define(
+  // 关注列表
   'attentionlist',
   {
     'user_id': {
@@ -180,11 +186,39 @@ const attentionlist = sequelize.define(
     },
     'target_id': {
       'type': Sequelize.STRING,
-      'allowNull': false
+      'allowNull': false,
+      'references': {
+        'model': 'accounts',
+        'key': 'user_id'
+      }
     }
   }
 )
 attentionlist.sync();
+
+const transmitlist = sequelize.define(
+  // 转发列表
+  'transmitlist',
+  {
+    'poetrylist_id': {
+      'type': Sequelize.CHAR(64),
+      'allowNull': false
+    },
+    'content': {
+      'type': Sequelize.TEXT,
+      'allowNull': false
+    },
+    'user_id': {
+      'type': Sequelize.STRING,
+      'allowNull': false,
+      'references': {
+        'model': 'accounts',
+        'key': 'user_id'
+      }
+    }
+  }
+)
+transmitlist.sync();
 
 sequelize.authenticate().then(() => {
   console.log('Connection has been established successfully.');

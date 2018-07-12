@@ -3,10 +3,10 @@
     <ul class="list" >
       <li class="item" v-for="(list, index) in datalist" @click="toPoetryDetail(list)">
         <div class="avater">
-          <div class="logo">
+          <div class="logo" @click.stop="toUsercenter(list)">
             <img :src="require(`../../assets/avater/${list.account.avatar}.jpg`)" alt="">
           </div>
-          <div class="userinfo">
+          <div class="userinfo" @click.stop="toUsercenter(list)">
             <p class="username">{{list.account.user_name}}</p>
             <p class="creattime">{{list.create_temp|forMatDate(list.create_temp)}}</p>
           </div>
@@ -20,8 +20,8 @@
             return v
             })" :key="ind">{{item}}</p>
           </div>
-          <div class="transmit" v-if="list.transmit_content">
-            <span class="aite">@{{list.transmit_user_name}}</span>
+          <div class="transmit" v-if="list.transmit_content" @click.stop="toTransimt(list)">
+            <span class="aite" @click.stop="toTransimtUsercenter(list)">@{{list.transmit_user_name}}</span>
             <p v-for="(item, ind) in list.transmit_content.split('\n').map(v => {
             return v
             })" :key="ind">{{item}}</p>
@@ -63,6 +63,18 @@
       transmit (list) {
         // 转发
         this.$router.push({path: '/publish', query: {poetrylist_id: list.poetrylist_id}})
+      },
+      toUsercenter (list) {
+        // 进入用户中心
+        this.$router.push({path: '/usercenter', query: {user_id: list.user_id}})
+      },
+      toTransimtUsercenter (list) {
+        // 进入被转发人微博的用户中心
+        this.$router.push({path: '/usercenter', query: {user_id: list.transmit_user_id}})
+      },
+      toTransimt (list) {
+        // 进入转发的微博详情
+        this.$router.push({path: '/poetrydetail', query: {poetrylist_id: list.transmit_poetrylist_id, user_id: list.transmit_user_id}})
       },
       toPoetryDetail (list) {
         // 文章详情
