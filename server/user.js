@@ -57,7 +57,7 @@ Router.post('/updataUserInfo', function(req,res) {
 
 Router.post('/getUserInfo', function(req,res) {
   // 完善用户信息
-  const user_id = req.cookies.user_id
+  const user_id = req.body.user_id ? req.body.user_id : req.cookies.user_id
   account.findOne({
     'where': {'user_id': user_id},
     attributes: ['user_name', 'avatar', 'user_info', 'user_fans', 'attention', 'poetry_num', 'user_id']
@@ -92,7 +92,7 @@ Router.get('/getalluser', function(req,res) {
 Router.get('/cleardata', function(req,res) {
   // 清空全部数据
   poetrylist.destroy({
-    where: {'id': 5}
+    
   }).then((doc) => {
     return res.json({
       code: 0,
@@ -103,7 +103,7 @@ Router.get('/cleardata', function(req,res) {
 
 
 Router.post('/addPoetryItem', function(req, res) {
-  // 发表一个骚话
+  // 发表微博
   // pwdMd5
   const body = req.body.item
   const star = req.body.star
@@ -169,6 +169,7 @@ Router.get('/getPoetryList', function(req, res) {
       'transmit_content',
       'transmit_user_id',
       'transmit_user_name',
+      'transmit_poetrylist_id',
       'id'],
     order: [
       ['create_temp', 'DESC'],

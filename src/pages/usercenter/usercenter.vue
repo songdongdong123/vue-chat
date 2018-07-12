@@ -46,12 +46,14 @@
       }
     },
     created () {
-      // let userId = this.$route.query.user_id
       this.getUserInfo()
     },
     methods: {
       getUserInfo () {
-        this._getUserInfo({}).then(res => {
+        let userid = {
+          user_id: this.$route.query.user_id
+        }
+        this._getUserInfo({userid}).then(res => {
           this.userinfo = res.user_info
           let poetrylist = res.list
           this.poetrylist = poetrylist.map(v => {

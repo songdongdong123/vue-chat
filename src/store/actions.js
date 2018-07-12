@@ -61,10 +61,11 @@ const _updataUserInfo = function ({commit, state}, {userinfo}) {
   })
 }
 
-const _getUserInfo = function ({commit, state}) {
+const _getUserInfo = function ({commit, state}, {userid}) {
   // 获取用户信息
+  // console.log(userid)
   return new Promise((resolve, reject) => {
-    getUserInfo({}).then(res => {
+    getUserInfo(userid).then(res => {
       if (res.status === 200 && res.data.code === 0) {
         commit(types.SET_USER_INFO, res.data.data)
         resolve(res.data.data)

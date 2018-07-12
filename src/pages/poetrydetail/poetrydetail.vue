@@ -31,7 +31,7 @@
               return v
             })">{{list}}</p>
           <div class="lite">
-            <p>转发<span>100</span></p>
+            <p>转发<span>{{poetrydetail.star}}</span></p>
             <p class="comment">评论{{getcommentlists.length}}</p>
             <p>赞{{poetrydetail.recommend}}</p>
           </div>

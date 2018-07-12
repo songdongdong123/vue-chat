@@ -46,7 +46,7 @@
     },
     methods: {
       submitpoetry () {
-        // 发表骚话
+        // 发表微博
         const item = {
           content: this.content,
           transmit_content: this.transmitPoetry.content,
