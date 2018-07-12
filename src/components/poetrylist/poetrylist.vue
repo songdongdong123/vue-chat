@@ -10,8 +10,8 @@
             <p class="username">{{list.account.user_name}}</p>
             <p class="creattime">{{list.create_temp|forMatDate(list.create_temp)}}</p>
           </div>
-          <div class="keep_attention" @click.stop="testShare">
-            <span>+ 分享</span>
+          <div class="keep_attention" @click.stop="subscription(list)">
+            <span>+ 关注</span>
           </div>
         </div>
         <div class="poetrycontainer">
@@ -60,11 +60,15 @@
       this.cookie = getCookie('user_id')
     },
     methods: {
-      testShare () {
-        window.FB.ui({
-          method: 'share',
-          href: 'https://1peso.mx'
-        }, function (response) {})
+      subscription (list) {
+        // FB分享接口
+        // window.FB.ui({
+        //   method: 'share',
+        //   href: 'https://1peso.mx'
+        // }, function (response) {})
+        this._subscription(list.user_id).then(res => {
+          console.log(res)
+        })
       },
       transmit (list) {
         // 转发
@@ -114,7 +118,8 @@
         }
       },
       ...mapActions({
-        upDatePoetrylist: 'likePoetry'
+        upDatePoetrylist: 'likePoetry',
+        _subscription: '_subscription'
       })
     }
   }

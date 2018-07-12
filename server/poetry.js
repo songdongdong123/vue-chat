@@ -9,8 +9,9 @@ const attentionlist = sequelize.model('attentionlist')
 const transmitlist = sequelize.model('transmitlist')
 account.hasMany(guestbook,{foreignKey: 'user_id', targetKey: 'user_id'});
 account.hasMany(poetrylist,{foreignKey: 'user_id', targetKey: 'user_id'});
-account.hasMany(supportlist,{foreignKey: 'user_id', targetKey: 'user_id'});
+// account.hasMany(supportlist,{foreignKey: 'user_id', targetKey: 'user_id'});
 guestbook.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
+attentionlist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 poetrylist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 transmitlist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 supportlist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
@@ -53,7 +54,7 @@ Router.post('/getTransmitList', function(req, res) {
 })
 
 Router.post('/getSupportList', function(req, res) {
-  console.log(req.body)
+  // 获取点赞列表
   const poetrylist_id = req.body.poetrylist_id
   supportlist.findAll({
     include: [{
@@ -62,6 +63,20 @@ Router.post('/getSupportList', function(req, res) {
     }],
     where: {poetrylist_id: poetrylist_id}
   }).then(doc => {
+    return res.json({
+      code: 0,
+      data: doc
+    })
+  })
+})
+
+Router.post('/subscription', function (req, res) {
+  // 关注
+  const data = {
+    user_id: req.cookies.user_id,
+    target_id: req.body.target_id
+  }
+  attentionlist.create(data).then(doc => {
     return res.json({
       code: 0,
       data: doc

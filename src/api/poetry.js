@@ -8,9 +8,12 @@ const getTransmitList = params => axios.post('/poetry/getTransmitList', params)
 
 const getSupportList = params => axios.post('/poetry/getSupportList', params)
 
+const subscription = params => axios.post('/poetry/subscription', params)
+
 export {
   getPoetryDetail,
   getPoetryBrief,
   getTransmitList,
-  getSupportList
+  getSupportList,
+  subscription
 }
