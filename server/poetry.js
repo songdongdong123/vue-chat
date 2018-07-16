@@ -9,8 +9,9 @@ const attentionlist = sequelize.model('attentionlist')
 const transmitlist = sequelize.model('transmitlist')
 account.hasMany(guestbook,{foreignKey: 'user_id', targetKey: 'user_id'});
 account.hasMany(poetrylist,{foreignKey: 'user_id', targetKey: 'user_id'});
-account.hasMany(supportlist,{foreignKey: 'user_id', targetKey: 'user_id'});
+// account.hasMany(supportlist,{foreignKey: 'user_id', targetKey: 'user_id'});
 guestbook.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
+attentionlist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 poetrylist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 transmitlist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 supportlist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
@@ -53,7 +54,7 @@ Router.post('/getTransmitList', function(req, res) {
 })
 
 Router.post('/getSupportList', function(req, res) {
-  console.log(req.body)
+  // 获取点赞列表
   const poetrylist_id = req.body.poetrylist_id
   supportlist.findAll({
     include: [{
@@ -65,6 +66,51 @@ Router.post('/getSupportList', function(req, res) {
     return res.json({
       code: 0,
       data: doc
+    })
+  })
+})
+
+Router.post('/subscription', function (req, res) {
+  // 关注
+  const data = {
+    user_id: req.cookies.user_id,
+    target_id: req.body.target_id
+  }
+  // Transaction是Sequelize中用于实现事务功能的子类，
+  // 通过调用Sequelize.transaction()方法可以创建一个该类的实例。
+  // 在Sequelize中，支持自动提交/回滚，也可以支持用户手动提交/回滚。
+  return sequelize.transaction(t => {
+    return attentionlist.findOne({
+      'where': {
+        'user_id': req.cookies.user_id,
+        'target_id': req.body.target_id
+      }
+    },{transaction: t}).then(doc => {
+      if (!doc) {
+        return attentionlist.create(data,{transaction: t}).then(ret => {
+          return account.findOne({
+            'where': {'user_id': req.cookies.user_id},
+            attributes: ['attention']
+          })
+        }, {transaction: t}).then(rets => {
+          let attention = rets.attention + 1
+          return account.update(
+            {'attention': attention},
+            {
+            'where': {'user_id': req.cookies.user_id}
+            }
+          )
+        }, {transaction: t}).then(docs => {
+          return docs
+        })
+      } else {
+        return 100
+      }
+    })
+  }).then(result => {
+    return res.json({
+      code: 0,
+      data: result
     })
   })
 })
