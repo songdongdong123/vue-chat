@@ -66,7 +66,12 @@
         //   method: 'share',
         //   href: 'https://1peso.mx'
         // }, function (response) {})
-        this._subscription(list.user_id).then(res => {
+        let targetId = {
+          target_id: list.user_id
+        }
+        this._subscription({
+          targetId
+        }).then(res => {
           console.log(res)
         })
       },

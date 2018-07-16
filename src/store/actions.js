@@ -165,9 +165,10 @@ const _getSupportList = function ({commit, state}, poetrylistId) {
 }
 
 const _subscription = function ({commit, state}, {targetId, num}) {
+  console.log(targetId)
   return new Promise((resolve, reject) => {
     subscription({
-      target_id: targetId
+      target_id: targetId.target_id
     }).then(res => {
       if (res.status === 200 && res.data.code === 0) {
         resolve(res.data)

@@ -76,10 +76,41 @@ Router.post('/subscription', function (req, res) {
     user_id: req.cookies.user_id,
     target_id: req.body.target_id
   }
-  attentionlist.create(data).then(doc => {
+  // Transaction是Sequelize中用于实现事务功能的子类，
+  // 通过调用Sequelize.transaction()方法可以创建一个该类的实例。
+  // 在Sequelize中，支持自动提交/回滚，也可以支持用户手动提交/回滚。
+  return sequelize.transaction(t => {
+    return attentionlist.findOne({
+      'where': {
+        'user_id': req.cookies.user_id,
+        'target_id': req.body.target_id
+      }
+    },{transaction: t}).then(doc => {
+      if (!doc) {
+        return attentionlist.create(data,{transaction: t}).then(ret => {
+          return account.findOne({
+            'where': {'user_id': req.cookies.user_id},
+            attributes: ['attention']
+          })
+        }, {transaction: t}).then(rets => {
+          let attention = rets.attention + 1
+          return account.update(
+            {'attention': attention},
+            {
+            'where': {'user_id': req.cookies.user_id}
+            }
+          )
+        }, {transaction: t}).then(docs => {
+          return docs
+        })
+      } else {
+        return 100
+      }
+    })
+  }).then(result => {
     return res.json({
       code: 0,
-      data: doc
+      data: result
     })
   })
 })
