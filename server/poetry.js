@@ -11,12 +11,29 @@ account.hasMany(guestbook,{foreignKey: 'user_id', targetKey: 'user_id'});
 account.hasMany(poetrylist,{foreignKey: 'user_id', targetKey: 'user_id'});
 // account.hasMany(supportlist,{foreignKey: 'user_id', targetKey: 'user_id'});
 guestbook.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
-attentionlist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
+attentionlist.belongsTo(account, {foreignKey: 'target_id', targetKey: 'user_id'});
 poetrylist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 transmitlist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 supportlist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 
 const utility  = require('utility')
+
+
+Router.get('/getUserAttentionlist', function (req, res) {
+  // 获取用户关注列表
+  attentionlist.findAll({
+    include: [{
+      model: account,
+      attributes: ['user_name', 'avatar', 'create_temp', 'user_id', 'user_info'] // 想要只选择某些属性可以使用 attributes: ['foo', 'bar']
+    }],
+    where: {'user_id': req.cookies.user_id}
+  }).then(doc => {
+    return res.json({
+      code: 0,
+      data: doc
+    })
+  })
+})
 
 Router.post('/getPoetryBrief', function(req, res) {
   // 转发消息内容获取（包括用户信息）
@@ -37,7 +54,7 @@ Router.post('/getPoetryBrief', function(req, res) {
 })
 
 Router.post('/getTransmitList', function(req, res) {
-  // 获取转发列表
+  // 获取当前文章的转发列表
   const poetrylist_id = req.body.poetrylist_id
   transmitlist.findAll({
     include: [{
@@ -54,7 +71,7 @@ Router.post('/getTransmitList', function(req, res) {
 })
 
 Router.post('/getSupportList', function(req, res) {
-  // 获取点赞列表
+  // 获取当前文章的点赞列表
   const poetrylist_id = req.body.poetrylist_id
   supportlist.findAll({
     include: [{
@@ -71,7 +88,7 @@ Router.post('/getSupportList', function(req, res) {
 })
 
 Router.post('/subscription', function (req, res) {
-  // 关注
+  // 关注功能
   const data = {
     user_id: req.cookies.user_id,
     target_id: req.body.target_id

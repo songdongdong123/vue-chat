@@ -4,7 +4,7 @@
       <li class="item" v-for="(list, index) in datalist" @click="toPoetryDetail(list)">
         <div class="avater">
           <div class="logo" @click.stop="toUsercenter(list)">
-            <img :src="require(`../../assets/avater/${list.account.avatar}.jpg`)" alt="">
+            <img :src="require(`../../assets/avater/${list.account.avatar|| 1}.jpg`)" alt="">
           </div>
           <div class="userinfo" @click.stop="toUsercenter(list)">
             <p class="username">{{list.account.user_name}}</p>

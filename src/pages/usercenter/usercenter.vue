@@ -14,15 +14,15 @@
     </div>
     <div class="somemsg">
       <div class="msgcontainer">
-        <p class="article">
+        <p class="article" :class="{'active': listtype === 0}" @click="showThisList(0)">
           <span>{{poetrylist.length}}</span>
           <span>文章</span>
         </p>
-        <p class="attention">
+        <p class="attention" :class="{'active': listtype === 1}" @click="showThisList(1)">
           <span>{{userinfo.attention}}</span>
           <span>关注</span>
         </p>
-        <p class="fans">
+        <p class="fans" :class="{'active': listtype === 2}" @click="showThisList(2)">
           <span>{{userinfo.user_fans}}</span>
           <span>粉丝</span>
         </p>
@@ -30,26 +30,56 @@
       <p class="edit">编辑个人资料</p>
     </div>
     <poetrylistcompent
+      v-if="listtype === 0"
       :datalist="poetrylist"
     ></poetrylistcompent>
+    <attentionlist
+      v-if="listtype === 1"
+      :attentionlist="attentionlist"
+    >
+    </attentionlist>
   </div>
 </template>
 
 <script>
   import poetrylistcompent from '../../components/poetrylist/poetrylist'
+  import attentionlist from '@/components/attentionlist/attentionlist'
   import { mapActions } from 'vuex'
   export default {
     data () {
       return {
         userinfo: {},
-        poetrylist: []
+        poetrylist: [],
+        attentionlist: [],
+        listtype: 1
       }
     },
     created () {
       this.getUserInfo()
+      this._getUserTransmitlist()
     },
     methods: {
+      showThisList (type) {
+        switch (type) {
+          case 0:
+            this.listtype = 0
+            break
+          case 1:
+            this.listtype = 1
+            break
+          case 2:
+            this.listtype = 2
+            break
+        }
+      },
+      _getUserTransmitlist () {
+        // 获取关注列表
+        this._getUserAttentionlist().then(res => {
+          this.attentionlist = res.data
+        })
+      },
       getUserInfo () {
+        // 获取用户信息
         let userid = {
           user_id: this.$route.query.user_id
         }
@@ -70,11 +100,13 @@
         this.$router.push({path: '/'})
       },
       ...mapActions([
-        '_getUserInfo'
+        '_getUserInfo',
+        '_getUserAttentionlist'
       ])
     },
     components: {
-      poetrylistcompent
+      poetrylistcompent,
+      attentionlist
     }
   }
 </script>
@@ -110,16 +142,20 @@
       display:flex
       align-items:center
       justify-content:space-between
-      color:#fff
       margin:auto 15px
       margin-top:20px
+      color:#fff
       .msgcontainer
+        color:#999
         display:flex
         p
+          text-align:center
           span
             display:block
         p>span:not(:last-child)
           margin-bottom:5px
+        .active
+          color:#fff
       .msgcontainer>p:not(:last-child)
         margin-right:25px
       .edit
