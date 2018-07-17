@@ -57,6 +57,7 @@
     created () {
       this.getUserInfo()
       this._getUserTransmitlist()
+      this._getUserFans()
     },
     methods: {
       showThisList (type) {
@@ -71,6 +72,12 @@
             this.listtype = 2
             break
         }
+      },
+      _getUserFans () {
+        // 获取粉丝列表
+        this._getUserFans({}).then(res => {
+          console.log(res)
+        })
       },
       _getUserTransmitlist () {
         // 获取关注列表
@@ -101,7 +108,8 @@
       },
       ...mapActions([
         '_getUserInfo',
-        '_getUserAttentionlist'
+        '_getUserAttentionlist',
+        '_getUserFans'
       ])
     },
     components: {

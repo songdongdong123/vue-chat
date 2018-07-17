@@ -2,7 +2,7 @@ import * as types from './mutation-types'
 import { Loading } from '../Plugins/index'
 import { getPoetryList, addPoetryItem, linkThisPoetry } from 'api/home'
 import { register, updataUserInfo, getUserInfo, login } from 'api/account'
-import { getPoetryDetail, getTransmitList, getSupportList, subscription, getUserAttentionlist } from 'api/poetry'
+import { getPoetryDetail, getTransmitList, getSupportList, subscription, getUserFans, getUserAttentionlist } from 'api/poetry'
 // getTransmitList
 import { sendComment, getAllComments } from 'api/comment'
 const poetryList = function ({commit, state}) {
@@ -165,7 +165,6 @@ const _getSupportList = function ({commit, state}, poetrylistId) {
 }
 
 const _subscription = function ({commit, state}, {targetId, num}) {
-  console.log(targetId)
   return new Promise((resolve, reject) => {
     subscription({
       target_id: targetId.target_id
@@ -187,6 +186,16 @@ const _getUserAttentionlist = function ({commit, state}) {
   })
 }
 
+const _getUserFans = function ({commit, state}) {
+  return new Promise((resolve, reject) => {
+    getUserFans({}).then(res => {
+      if (res.status === 200 && res.data.code === 0) {
+        resolve(res.data)
+      }
+    })
+  })
+}
+
 export {
   poetryList,
   setPoetryItem,
@@ -201,5 +210,6 @@ export {
   _getTransmitList,
   _getSupportList,
   _subscription,
-  _getUserAttentionlist
+  _getUserAttentionlist,
+  _getUserFans
 }
