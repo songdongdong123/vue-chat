@@ -12,11 +12,14 @@ const subscription = params => axios.post('/poetry/subscription', params)
 
 const getUserAttentionlist = params => axios.get('/poetry/getUserAttentionlist', params)
 
+const getUserFans = params => axios.get('/poetry/getUserFans', params)
+
 export {
   getPoetryDetail,
   getPoetryBrief,
   getTransmitList,
   getSupportList,
   subscription,
-  getUserAttentionlist
+  getUserAttentionlist,
+  getUserFans
 }
