@@ -6,15 +6,11 @@ const poetrylist = sequelize.model('poetrylist')
 const guestbook = sequelize.model('guestbook')
 const supportlist = sequelize.model('supportlist')
 const attentionlist = sequelize.model('attentionlist')
-const attentionlists = sequelize.model('attentionlist')
+// const attentionlists = sequelize.model('attentionlist')
 const transmitlist = sequelize.model('transmitlist')
-account.hasMany(guestbook,{foreignKey: 'user_id', targetKey: 'user_id'});
-account.hasMany(poetrylist,{foreignKey: 'user_id', targetKey: 'user_id'});
-// account.hasMany(attentionlists,{foreignKey: 'user_id', targetKey: 'user_id'});
 
 guestbook.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 attentionlist.belongsTo(account, {foreignKey: 'target_id', targetKey: 'user_id'});
-// attentionlists.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 poetrylist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 transmitlist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 supportlist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
@@ -22,21 +18,6 @@ supportlist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 const utility  = require('utility')
 
 
-Router.get('/getUserFans', function (req, res) {
-  // 获取当前用户粉丝列表
-  attentionlists.findAll({
-    include: [{
-      model: account,
-      attributes: ['user_name', 'avatar', 'create_temp', 'user_id', 'user_info'] // 想要只选择某些属性可以使用 attributes: ['foo', 'bar']
-    }],
-    where: {'target_id': req.cookies.user_id}
-  }).then(doc => {
-    return res.json({
-      code: 0,
-      data: doc
-    })
-  })
-})
 
 Router.get('/getUserAttentionlist', function (req, res) {
   // 获取用户关注列表
@@ -115,7 +96,9 @@ Router.post('/subscription', function (req, res) {
   // Transaction是Sequelize中用于实现事务功能的子类，
   // 通过调用Sequelize.transaction()方法可以创建一个该类的实例。
   // 在Sequelize中，支持自动提交/回滚，也可以支持用户手动提交/回滚。
-  return sequelize.transaction(t => {
+  return sequelize.transaction({
+    autocommit: true
+  }, t => {
     return attentionlist.findOne({
       'where': {
         'user_id': req.cookies.user_id,
@@ -124,19 +107,27 @@ Router.post('/subscription', function (req, res) {
     },{transaction: t}).then(doc => {
       if (!doc) {
         return attentionlist.create(data,{transaction: t}).then(ret => {
+        //   return account.findOne({
+        //     'where': {'user_id': req.cookies.user_id}
+        //   })
+        // }, {transaction: t}).then(rets => {
+        //   // let attention = rets.attention + 1
+        //   // return account.update(
+        //   //   {'attention': attention},
+        //   //   {
+        //   //   'where': {'user_id': req.cookies.user_id}
+        //   //   }
+        //   // )
           return account.findOne({
-            'where': {'user_id': req.cookies.user_id},
-            attributes: ['attention']
-          })
-        }, {transaction: t}).then(rets => {
-          let attention = rets.attention + 1
-          return account.update(
-            {'attention': attention},
-            {
             'where': {'user_id': req.cookies.user_id}
-            }
-          )
+          }, {transaction: t}).then(rets => {
+            // return rets
+            return rets.increment('attention').then(retss => {
+              return 'success'
+            })
+          })
         }, {transaction: t}).then(docs => {
+          // return account.increment('attention', {by: 2})
           return docs
         })
       } else {
