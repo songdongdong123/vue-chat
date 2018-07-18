@@ -182,7 +182,11 @@ const attentionlist = sequelize.define(
   {
     'user_id': {
       'type': Sequelize.STRING,
-      'allowNull': false
+      'allowNull': false,
+      'references': {
+        'model': 'accounts',
+        'key': 'user_id'
+      }
     },
     'target_id': {
       'type': Sequelize.STRING,
