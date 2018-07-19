@@ -38,6 +38,11 @@
       :attentionlist="attentionlist"
     >
     </attentionlist>
+    <attentionlist
+      v-if="listtype === 2"
+      :attentionlist="attentionlist"
+    >
+    </attentionlist>
   </div>
 </template>
 
@@ -51,13 +56,13 @@
         userinfo: {},
         poetrylist: [],
         attentionlist: [],
-        listtype: 1
+        listtype: 0
       }
     },
     created () {
       this.getUserInfo()
-      this._getUserTransmitlist()
-      this._getUserFans()
+      // this._getUserTransmitlist()
+      // this._getUserFans()
     },
     methods: {
       showThisList (type) {
@@ -66,17 +71,19 @@
             this.listtype = 0
             break
           case 1:
+            this._getUserTransmitlist()
             this.listtype = 1
             break
           case 2:
+            this._getUserFan()
             this.listtype = 2
             break
         }
       },
-      _getUserFans () {
+      _getUserFan () {
         // 获取粉丝列表
-        this._getUserFans({}).then(res => {
-          console.log(res)
+        this._getUserFans().then(res => {
+          this.attentionlist = res.data
         })
       },
       _getUserTransmitlist () {

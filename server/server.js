@@ -16,7 +16,6 @@ app.use(bodyParser.urlencoded())
 
 app.use('/poetry', poetryRouter)
 app.use('/user', userRouter)
-app.use('/attentionlis', attentionlistRouter)
 
 app.listen(9094, function(){
   console.log('Node app start at port  9094')

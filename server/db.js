@@ -49,15 +49,18 @@ const account = sequelize.define(
     },
     'user_fans': {
       'type': Sequelize.INTEGER,
-      'allowNull': true
+      'allowNull': false,
+      'defaultValue': 0
     },
     'attention': {
       'type': Sequelize.BIGINT,
-      'allowNull': true
+      'allowNull': false,
+      'defaultValue': 0
     },
     'poetry_num': {
       'type': Sequelize.BIGINT,
-      'allowNull': true
+      'allowNull': false,
+      'defaultValue': 0
     }
   }
 )
@@ -182,19 +185,19 @@ const attentionlist = sequelize.define(
   {
     'user_id': {
       'type': Sequelize.STRING,
-      'allowNull': false,
-      'references': {
-        'model': 'accounts',
-        'key': 'user_id'
-      }
+      'allowNull': false
     },
     'target_id': {
       'type': Sequelize.STRING,
-      'allowNull': false,
-      'references': {
-        'model': 'accounts',
-        'key': 'user_id'
-      }
+      'allowNull': false
+    },
+    'isMyAttention': {
+      'type': Sequelize.BOOLEAN,
+      'defaultValue': false
+    },
+    'isMyFans': {
+      'type': Sequelize.BOOLEAN,
+      'defaultValue': false
     }
   }
 )
