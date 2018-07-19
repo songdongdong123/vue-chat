@@ -9,9 +9,6 @@ const guestbook = sequelize.model('guestbook')
 const supportlist = sequelize.model('supportlist')
 const attentionlist = sequelize.model('attentionlist')
 const transmitlist = sequelize.model('transmitlist')
-account.hasMany(guestbook,{foreignKey: 'user_id', targetKey: 'user_id'});
-account.hasMany(poetrylist,{foreignKey: 'user_id', targetKey: 'user_id'});
-account.hasMany(transmitlist,{foreignKey: 'user_id', targetKey: 'user_id'});
 guestbook.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 poetrylist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 transmitlist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
