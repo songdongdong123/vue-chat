@@ -193,7 +193,7 @@ const attentionlist = sequelize.define(
     },
     'isMyAttention': {
       'type': Sequelize.BOOLEAN,
-      'defaultValue': false
+      'defaultValue': true
     },
     'isMyFans': {
       'type': Sequelize.BOOLEAN,
