@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const cookirParse = require('cookie-parser')
 const sequelize = require('./db')
 const chat = sequelize.model('chat')
+const account = sequelize.model('account')
 
 const app = express()
 const userRouter = require('./user')
@@ -18,7 +19,20 @@ io.on('connection', function(socket) {
     const {form, to, msg} = data
     const chatid = [form,to].sort().join('_')
     chat.create({chatid, form, to, content: msg}).then(doc => {
-      io.emit('recvemsg', doc)
+      chat.findOne({
+        include:[{
+          model: account
+        }],
+        'where': {'id': doc.id}
+      }).then(res => {
+        const chatmsg = {
+          account: res.account,
+          form: form,
+          to: to,
+          content: msg
+        }
+        io.emit('recvemsg', chatmsg)
+      })
     })
   })
 })
