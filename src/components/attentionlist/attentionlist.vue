@@ -34,7 +34,7 @@
     methods: {
       toChat (list) {
         // console.log(this.userid)
-        this.$router.push({path: 'chat', query: {form: list.account.user_id, to: this.userid}})
+        this.$router.push({path: 'chat', query: {form: this.userid, to: list.account.user_id}})
       }
     }
   }
