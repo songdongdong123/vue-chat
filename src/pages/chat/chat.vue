@@ -1,8 +1,18 @@
 <template>
   <div class="chat">
-    <p>chat:</p>
     <div class="msglist">
-      <p v-for="list in msglist">{{list}}</p>
+      <p v-for="list in getmsglist"
+        class="basechatitem"
+        :class="{'chatto':list.form === userid}"
+      >
+        <span>
+          <!-- list.account.user_name + -->
+          {{
+            list.form===userid?(list.content + ':'):( ':'+ list.content)
+          }}
+        </span>
+        <!-- <span>{{list.account.user_name}}:{{list.content}}</span> -->
+      </p>
     </div>
     <div class="sendmsg">
       <input type="text" v-model="msg" placeholder="输入聊天信息">
@@ -13,30 +23,38 @@
 
 <script>
   // import io from 'socket.io-client'
+  import { mapActions, mapGetters } from 'vuex'
   // const socket = io('ws://localhost:9094')
-  import { mapActions } from 'vuex'
   export default {
     data () {
       return {
         msg: '',
-        msglist: []
+        msglist: [],
+        userid: ''
       }
     },
     created () {
-      // socket.on('recvmsg', (data) => {
-      //   this.msglist = [...this.msglist, data.msg]
-      // })
+      this.userid = this.$route.query.form
+      this.getMsgList()
+      this.recvMsg()
+      // // socket.on('recvmsg', (data) => {
+      // //   this.msglist = [...this.msglist, data.msg]
+      // // })
+    },
+    computed: {
+      ...mapGetters([
+        'getmsglist'
+      ])
     },
     methods: {
-      _getMsgList () {
-        // 获取聊天列表
-      },
       submitMsg () {
-        // socket.emit('sendmsg', {msg: this.msg})
+        this.sendMsg({form: this.$route.query.form, to: this.$route.query.to, msg: this.msg})
         this.msg = ''
       },
       ...mapActions({
-        getMsgList: 'getMsgList'
+        getMsgList: 'getMsgList',
+        sendMsg: 'sendMsg',
+        recvMsg: 'recvMsg'
       })
     }
   }
@@ -45,6 +63,11 @@
 <style lang="stylus" scoped>
   .chat
     color:#fff
+    .msglist
+      .chatto
+        text-align:right
+      .basechatitem
+        height:30px
     .sendmsg
       position:fixed
       bottom:0

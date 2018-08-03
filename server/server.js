@@ -3,6 +3,8 @@ const express = require('express')
 const bodyParser = require('body-parser')
 
 const cookirParse = require('cookie-parser')
+const sequelize = require('./db')
+const chat = sequelize.model('chat')
 
 const app = express()
 const userRouter = require('./user')
@@ -13,7 +15,11 @@ const server = require('http').Server(app)
 const io = require('socket.io')(server)
 io.on('connection', function(socket) {
   socket.on('sendmsg', function (data) {
-    io.emit('recvmsg', data)
+    const {form, to, msg} = data
+    const chatid = [form,to].sort().join('_')
+    chat.create({chatid, form, to, content: msg}).then(doc => {
+      io.emit('recvemsg', doc)
+    })
   })
 })
 

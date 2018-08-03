@@ -5,8 +5,8 @@ import { register, updataUserInfo, getUserInfo, login } from 'api/account'
 import { getPoetryDetail, getTransmitList, getSupportList, subscription, getUserFans, getUserAttentionlist } from 'api/poetry'
 import { sendComment, getAllComments } from 'api/comment'
 import { getChatMsgList } from 'api/chat'
-// import io from 'socket.io-client'
-// const socket = io('ws://localhost:9094')
+import io from 'socket.io-client'
+const socket = io('ws://localhost:9094')
 const poetryList = function ({commit, state}) {
   // 获取文章列表
   getPoetryList({}).then(res => {
@@ -199,12 +199,20 @@ const _getUserFans = function ({commit, state}) {
 }
 
 const getMsgList = function ({commit, state}) {
-  return new Promise((resolve, reject) => {
-    getChatMsgList({}).then(res => {
-      if (res.status === 200 && res.data.code === 0) {
-        resolve(res.data)
-      }
-    })
+  getChatMsgList({}).then(res => {
+    if (res.status === 200 && res.data.code === 0) {
+      commit(types.SET_MSG_LIST, res.data.data)
+    }
+  })
+}
+const sendMsg = function ({commit, state}, {form, to, msg}) {
+  socket.emit('sendmsg', {form, to, msg})
+}
+
+const recvMsg = function ({commit, state}) {
+  socket.on('recvemsg', function (data) {
+    const msglist = [].concat(state.msglist).concat(data)
+    commit(types.SET_MSG_LIST, msglist)
   })
 }
 
@@ -224,5 +232,7 @@ export {
   _subscription,
   _getUserAttentionlist,
   _getUserFans,
-  getMsgList
+  getMsgList,
+  sendMsg,
+  recvMsg
 }

@@ -36,6 +36,7 @@
     <attentionlist
       v-if="listtype === 1"
       :attentionlist="attentionlist"
+      :userid="userinfo.user_id"
     >
     </attentionlist>
     <attentionlist

@@ -233,7 +233,7 @@ const chat = sequelize.define(
   'chat',
   {
     'chatid': {
-      'type': Sequelize.STRING,
+      'type': Sequelize.TEXT,
       'allowNull': false
     },
     'form': {
@@ -250,12 +250,10 @@ const chat = sequelize.define(
     },
     'read': {
       'type': Sequelize.BOOLEAN,
-      'allowNull': false,
       'defaultValue': false
     },
     'content': {
       'type': Sequelize.TEXT,
-      'allowNull': false,
       'defaultValue': ''
     }
   }
