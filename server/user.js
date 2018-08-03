@@ -9,11 +9,32 @@ const guestbook = sequelize.model('guestbook')
 const supportlist = sequelize.model('supportlist')
 const attentionlist = sequelize.model('attentionlist')
 const transmitlist = sequelize.model('transmitlist')
+const chat = sequelize.model('chat')
+chat.belongsTo(account, {foreignKey: 'from', targetKey: 'user_id'});
 guestbook.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 poetrylist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 transmitlist.belongsTo(account, {foreignKey: 'user_id', targetKey: 'user_id'});
 
 const utility  = require('utility')
+
+
+Router.post('/getChatMsgList', function(req, res) {
+  // 获取聊天记录
+  const user_id = req.cookies.user_id
+  chat.findAll({
+    include:[{
+      model: account
+    }],
+    'where': {
+      '$or':[{'from': user_id},{'to': user_id}]
+    }
+  }).then(doc => {
+    return res.json({
+      code: 0,
+      data: doc
+    })
+  })
+})
 
 
 Router.post('/register', function(req, res) {
@@ -45,7 +66,14 @@ Router.post('/updataUserInfo', function(req,res) {
   // 完善用户信息
   const user_id = req.cookies.user_id
   const user_info = req.body.userinfo
-  account.update(user_info, {'where': {'user_id': user_id}}).then((doc) => {
+  account.update(
+    user_info, // 这里是我们要更新的字段，使用逗号隔开
+    {
+      'where': {
+        'user_id': user_id // 这里是我们要更新那条数据的条件
+      }
+    }
+  ).then((doc) => {
     return res.json({
       code: 0,
       data: {
@@ -58,8 +86,10 @@ Router.post('/updataUserInfo', function(req,res) {
 Router.post('/getUserInfo', function(req,res) {
   // 完善用户信息
   const user_id = req.body.user_id ? req.body.user_id : req.cookies.user_id
+  // account.findById
   account.findOne({
     'where': {'user_id': user_id},
+    // attributes属性可以指定返回结果，返回那些字段的信息
     attributes: ['user_name', 'avatar', 'user_info', 'user_fans', 'attention', 'poetry_num', 'user_id']
   }).then((doc) => {
     poetrylist.findAll({
@@ -92,7 +122,8 @@ Router.get('/getalluser', function(req,res) {
 Router.get('/cleardata', function(req,res) {
   // 清空全部数据
   poetrylist.destroy({
-    
+    // where: {id: 123}
+    // 这里可以根据我们定义的条件删除满足条件的数据
   }).then((doc) => {
     return res.json({
       code: 0,
@@ -152,8 +183,8 @@ Router.post('/addPoetryItem', function(req, res) {
 Router.get('/getPoetryList', function(req, res) {
   // 获取文章列表
   poetrylist.findAll({
-    include: [{
-      model: account,
+    include: [{ // 通过include字段执行要联合那个模型进行查询
+      model: account, // 执行模型
       attributes: ['user_name', 'avatar', 'user_id'] // 想要只选择某些属性可以使用 attributes: ['foo', 'bar']
     }],
     attributes: [
@@ -169,8 +200,8 @@ Router.get('/getPoetryList', function(req, res) {
       'transmit_user_name',
       'transmit_poetrylist_id',
       'id'],
-    order: [
-      ['create_temp', 'DESC'],
+    order: [ // 使用order进行排序
+      ['create_temp', 'DESC'], // 这；i按照时间顺序进行排序
     ]
   }).then((doc) => {
     supportlist.findAll({

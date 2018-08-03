@@ -1,7 +1,7 @@
 <template>
   <div class="attentionlist">
     <ul class="attention_list">
-      <li class="attention_item" v-for="list in attentionlist">
+      <li class="attention_item" v-for="list in attentionlist" @click="toChat(list)">
         <div class="left">
           <img :src="require(`../../assets/avater/${list.account.avatar||1}.jpg`)" alt="">
           <div class="usermsgs">
@@ -26,6 +26,11 @@
     },
     data () {
       return {}
+    },
+    methods: {
+      toChat (list) {
+        this.$router.push({path: 'chat', query: {user_id: list.account.user_id}})
+      }
     }
   }
 </script>

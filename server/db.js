@@ -227,6 +227,41 @@ const transmitlist = sequelize.define(
 )
 transmitlist.sync();
 
+
+const chat = sequelize.define(
+  // 转发列表
+  'chat',
+  {
+    'chatid': {
+      'type': Sequelize.STRING,
+      'allowNull': false
+    },
+    'form': {
+      'type': Sequelize.STRING,
+      'allowNull': false,
+      'references': {
+        'model': 'accounts',
+        'key': 'user_id'
+      }
+    },
+    'to': {
+      'type': Sequelize.STRING,
+      'allowNull': false
+    },
+    'read': {
+      'type': Sequelize.BOOLEAN,
+      'allowNull': false,
+      'defaultValue': false
+    },
+    'content': {
+      'type': Sequelize.TEXT,
+      'allowNull': false,
+      'defaultValue': ''
+    }
+  }
+)
+chat.sync();
+
 sequelize.authenticate().then(() => {
   console.log('Connection has been established successfully.');
 }).catch(err => {

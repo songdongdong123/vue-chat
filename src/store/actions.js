@@ -3,10 +3,12 @@ import { Loading } from '../Plugins/index'
 import { getPoetryList, addPoetryItem, linkThisPoetry } from 'api/home'
 import { register, updataUserInfo, getUserInfo, login } from 'api/account'
 import { getPoetryDetail, getTransmitList, getSupportList, subscription, getUserFans, getUserAttentionlist } from 'api/poetry'
-// getTransmitList
 import { sendComment, getAllComments } from 'api/comment'
+import { getChatMsgList } from 'api/chat'
+// import io from 'socket.io-client'
+// const socket = io('ws://localhost:9094')
 const poetryList = function ({commit, state}) {
-  // 获取骚话列表
+  // 获取文章列表
   getPoetryList({}).then(res => {
     if (res.status === 200 && res.data.code === 0) {
       commit(types.SET_POETRY_LIST, res.data.data)
@@ -196,6 +198,16 @@ const _getUserFans = function ({commit, state}) {
   })
 }
 
+const getMsgList = function ({commit, state}) {
+  return new Promise((resolve, reject) => {
+    getChatMsgList({}).then(res => {
+      if (res.status === 200 && res.data.code === 0) {
+        resolve(res.data)
+      }
+    })
+  })
+}
+
 export {
   poetryList,
   setPoetryItem,
@@ -211,5 +223,6 @@ export {
   _getSupportList,
   _subscription,
   _getUserAttentionlist,
-  _getUserFans
+  _getUserFans,
+  getMsgList
 }
