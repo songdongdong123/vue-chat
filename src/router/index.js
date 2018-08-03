@@ -76,6 +76,16 @@ export default new Router({
       meta: {
         title: '转发'
       }
+    },
+    {
+      path: '/chat',
+      name: 'chat',
+      component: (resolve) => {
+        require(['@/pages/chat/chat'], resolve)
+      },
+      meta: {
+        title: '聊天'
+      }
     }
   ]
 })

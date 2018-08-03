@@ -126,7 +126,9 @@ Router.post('/subscription', function (req, res) {
           return account.findOne({
             'where': {'user_id': req.cookies.user_id}
           }, {transaction: t}).then(rets => {
+            // increment自增函数
             return rets.increment('attention').then(retss => {
+              
               return 'success'
             })
           })

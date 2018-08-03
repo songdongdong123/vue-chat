@@ -2,7 +2,8 @@ const state = {
   poetryList: [],
   poetryItem: {},
   userinfo: {},
-  commentlist: []
+  commentlist: [],
+  msglist: []
 }
 
 export default state

@@ -31,3 +31,17 @@ npm run e2e
 # run all tests
 npm test
 ```
+
+
+<!-- 全局安装vue-cli -->
+npm install -g vue-cli
+<!-- 设置vue的webpack模板 -->
+vue init webpack my-project
+<!-- 进入项目 -->
+cd my-project
+<!-- 安装依赖 -->
+npm install
+<!-- 运行项目 -->
+npm run dev
+
+npm install express --save

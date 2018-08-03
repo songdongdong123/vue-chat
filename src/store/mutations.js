@@ -12,6 +12,9 @@ const mutations = {
   },
   [types.SET_COMMENT_LIST] (state, commentlist) {
     state.commentlist = commentlist
+  },
+  [types.SET_MSG_LIST] (state, msglist) {
+    state.msglist = msglist
   }
 }
 
