@@ -1,18 +1,18 @@
 <template>
   <div class="chat">
     <div class="msglist">
-      <p v-for="list in getmsglist"
+      <div v-for="list in getmsglist"
         class="basechatitem"
-        :class="{'chatto':list.form === userid}"
       >
-        <span>
-          <!-- list.account.user_name + -->
-          {{
-            list.form===userid?(list.content + ':'):( ':'+ list.content)
-          }}
-        </span>
-        <!-- <span>{{list.account.user_name}}:{{list.content}}</span> -->
-      </p>
+      <div class="chatbase chatto" v-if="list.form===userid">
+        <span>{{list.content}}</span>
+        <img :src="require(`../../assets/avater/${list.account.avatar||1}.jpg`)" alt="">
+      </div>
+      <div class="chatbase chatme" v-else>
+        <img :src="require(`../../assets/avater/${list.account.avatar||1}.jpg`)" alt="">
+        <span>{{list.content}}</span>
+      </div>
+      </div>
     </div>
     <div class="sendmsg">
       <input type="text" v-model="msg" placeholder="输入聊天信息">
@@ -37,9 +37,6 @@
       this.userid = this.$route.query.form
       this.getMsgList()
       this.recvMsg()
-      // // socket.on('recvmsg', (data) => {
-      // //   this.msglist = [...this.msglist, data.msg]
-      // // })
     },
     computed: {
       ...mapGetters([
@@ -64,10 +61,24 @@
   .chat
     color:#fff
     .msglist
-      .chatto
-        text-align:right
       .basechatitem
-        height:30px
+        height:50px
+        line-height:50px
+        .chatbase
+          display:flex
+          align-items:center
+          img
+            width:40px
+            height:40px
+            border-radius:100%
+        .chatto
+          justify-content:flex-end
+          text-align:left
+          img
+            margin-left:10px
+        .chatme
+          img
+            margin-right:10px
     .sendmsg
       position:fixed
       bottom:0
@@ -78,6 +89,7 @@
       input
         height:50px
         width:85%
+        padding-left:10px
       span
         display:inline-block
         height:50px
