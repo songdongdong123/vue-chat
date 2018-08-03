@@ -22,6 +22,10 @@
       attentionlist: {
         type: Array,
         default: null
+      },
+      userid: {
+        type: String,
+        default: ''
       }
     },
     data () {
@@ -29,7 +33,8 @@
     },
     methods: {
       toChat (list) {
-        this.$router.push({path: 'chat', query: {user_id: list.account.user_id}})
+        // console.log(this.userid)
+        this.$router.push({path: 'chat', query: {form: list.account.user_id, to: this.userid}})
       }
     }
   }
