@@ -5,6 +5,7 @@ import { register, updataUserInfo, getUserInfo, login } from 'api/account'
 import { getPoetryDetail, getTransmitList, getSupportList, subscription, getUserFans, getUserAttentionlist } from 'api/poetry'
 import { sendComment, getAllComments } from 'api/comment'
 import { getChatMsgList } from 'api/chat'
+// import { getChatId } from 'common/js/common'
 import io from 'socket.io-client'
 const socket = io('ws://localhost:9094')
 const poetryList = function ({commit, state}) {
@@ -209,9 +210,13 @@ const sendMsg = function ({commit, state}, {form, to, msg}) {
   socket.emit('sendmsg', {form, to, msg})
 }
 
-const recvMsg = function ({commit, state}) {
+const recvMsg = function ({commit, state}, {form, to}) {
   socket.on('recvemsg', function (data) {
-    const msglist = [].concat(state.msglist).concat(data)
+    // 获取chatid(由双方的userid组成)
+    // const chatid = getChatId(form, to)
+    // 删选聊天列表的数据，也就是只显示当前两个用户的聊天信息
+    // 如果不筛选，那么其他人发的消息也会展示在当前的聊天界面上
+    const msglist = [...state.msglist, data]
     commit(types.SET_MSG_LIST, msglist)
   })
 }

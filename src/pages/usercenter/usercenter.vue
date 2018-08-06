@@ -44,6 +44,9 @@
       :attentionlist="attentionlist"
     >
     </attentionlist>
+    <div class="msg" @click="toChatList">
+      <span class="icon-xinfeng"></span>
+    </div>
   </div>
 </template>
 
@@ -62,10 +65,11 @@
     },
     created () {
       this.getUserInfo()
-      // this._getUserTransmitlist()
-      // this._getUserFans()
     },
     methods: {
+      toChatList () {
+        this.$router.push({path: '/chatlist'})
+      },
       showThisList (type) {
         switch (type) {
           case 0:
@@ -182,5 +186,18 @@
         border-radius:3px
         font-size:14px
         box-sizing:border-box
+    .msg
+      position:fixed
+      bottom:10px
+      right:10px
+      width:50px
+      height:50px
+      background: rgba(27,154,244,0.8)
+      color:#fff
+      line-height:50px
+      text-align:center
+      border-radius:100%
+    .icon-xinfeng
+      font-size:25px
 </style>
 

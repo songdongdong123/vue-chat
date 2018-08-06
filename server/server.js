@@ -27,6 +27,7 @@ io.on('connection', function(socket) {
       }).then(res => {
         const chatmsg = {
           account: res.account,
+          chatid: doc.chatid,
           form: form,
           to: to,
           content: msg

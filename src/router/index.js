@@ -86,6 +86,16 @@ export default new Router({
       meta: {
         title: '聊天'
       }
+    },
+    {
+      path: '/chatlist',
+      name: 'chatlist',
+      component: (resolve) => {
+        require(['@/pages/chatlist/chatlist'], resolve)
+      },
+      meta: {
+        title: '消息列表'
+      }
     }
   ]
 })

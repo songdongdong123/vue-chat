@@ -1,7 +1,9 @@
 <template>
   <div class="chat">
     <div class="msglist">
-      <div v-for="list in getmsglist"
+      <div v-for="list in getmsglist.filter(v => {
+         return v.chatid === chatid
+        })"
         class="basechatitem"
       >
       <div class="chatbase chatto" v-if="list.form===userid">
@@ -24,19 +26,22 @@
 <script>
   // import io from 'socket.io-client'
   import { mapActions, mapGetters } from 'vuex'
+  import { getChatId } from 'common/js/common'
   // const socket = io('ws://localhost:9094')
   export default {
     data () {
       return {
         msg: '',
         msglist: [],
-        userid: ''
+        userid: '',
+        chatid: ''
       }
     },
     created () {
       this.userid = this.$route.query.form
+      this.chatid = getChatId(this.userid, this.$route.query.to)
       this.getMsgList()
-      this.recvMsg()
+      this.recvMsg({form: this.$route.query.form, to: this.$route.query.to})
     },
     computed: {
       ...mapGetters([
