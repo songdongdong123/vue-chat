@@ -5,7 +5,7 @@
       <p>消息列表</p>
     </div>
     <ul class="list">
-      <li v-for="(list, index) in getChatList" class="item" @click="toChat(list)">
+      <li v-for="(list, index) in getChatList.filter(v => v[0].form === userid || v[0].to === userid)" class="item" @click="toChat(list)">
         <div class="chatitem">
           <!-- 图像的取法和下面同理 -->
           <img :src="require(`../../assets/avater/${getUsers[list[0].form === userid ? list[0].to : list[0].form].avatar}.jpg`)" alt="">
@@ -13,13 +13,14 @@
             <p class="username">
               <!-- v[0].form === userid ? v[0].to : v[0].form -->
               <!-- 上面是为了得到聊天列表中每一项都是和谁在聊天 -->
+              <!-- {{list[0].form === userid ? list[0].to : list[0].form}} -->
               {{getUsers[list[0].form === userid ? list[0].to : list[0].form].user_name}}
             </p>
             <p class="msg">{{list[list.length-1].content}}</p>
           </div>
           <div class="chatorther">
             <p class="time">{{list[list.length-1].created_at|chatDate}}</p>
-            <p class="number">
+            <p class="number" v-show="list.filter(v=>v.to===userid&&!v.read).length">
               <span>{{list.filter(v=>v.to===userid&&!v.read).length}}</span>
             </p>
           </div>
