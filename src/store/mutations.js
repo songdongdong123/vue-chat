@@ -15,6 +15,15 @@ const mutations = {
   },
   [types.SET_MSG_LIST] (state, msglist) {
     state.msglist = msglist
+  },
+  [types.SET_CHAT_LIST] (state, chatlist) {
+    state.chatlist = chatlist
+  },
+  [types.SET_UNREAD] (state, number) {
+    state.unread = number
+  },
+  [types.SET_USERS] (state, users) {
+    state.users = users
   }
 }
 

@@ -9,6 +9,11 @@ const getCookie = function (name) {
   }
 }
 
+const getChatId = function (userId, targetId) {
+  return [userId, targetId].sort().join('_')
+}
+
 export {
-  getCookie
+  getCookie,
+  getChatId
 }

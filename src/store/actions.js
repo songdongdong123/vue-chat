@@ -5,6 +5,7 @@ import { register, updataUserInfo, getUserInfo, login } from 'api/account'
 import { getPoetryDetail, getTransmitList, getSupportList, subscription, getUserFans, getUserAttentionlist } from 'api/poetry'
 import { sendComment, getAllComments } from 'api/comment'
 import { getChatMsgList } from 'api/chat'
+// import { getChatId } from 'common/js/common'
 import io from 'socket.io-client'
 const socket = io('ws://localhost:9094')
 const poetryList = function ({commit, state}) {
@@ -202,6 +203,14 @@ const getMsgList = function ({commit, state}) {
   getChatMsgList({}).then(res => {
     if (res.status === 200 && res.data.code === 0) {
       commit(types.SET_MSG_LIST, res.data.data)
+      const msgGroup = {}
+      res.data.data.forEach(v => {
+        msgGroup[v.chatid] = msgGroup[v.chatid] || []
+        msgGroup[v.chatid].push(v)
+      })
+      const chatList = Object.values(msgGroup)
+      commit(types.SET_CHAT_LIST, chatList)
+      commit(types.SET_USERS, res.data.users)
     }
   })
 }
@@ -211,8 +220,18 @@ const sendMsg = function ({commit, state}, {form, to, msg}) {
 
 const recvMsg = function ({commit, state}) {
   socket.on('recvemsg', function (data) {
-    const msglist = [].concat(state.msglist).concat(data)
+    const msglist = [...state.msglist, data]
     commit(types.SET_MSG_LIST, msglist)
+    const msgGroup = {}
+    msglist.forEach(v => {
+      msgGroup[v.chatid] = msgGroup[v.chatid] || []
+      msgGroup[v.chatid].push(v)
+    })
+    const chatList = Object.values(msgGroup)
+    chatList.map(v => {
+      v = [...v, 1]
+    })
+    commit(types.SET_CHAT_LIST, chatList)
   })
 }
 
