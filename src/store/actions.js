@@ -220,6 +220,7 @@ const sendMsg = function ({commit, state}, {form, to, msg}) {
 
 const recvMsg = function ({commit, state}) {
   socket.on('recvemsg', function (data) {
+    // console.log
     const msglist = [...state.msglist, data]
     commit(types.SET_MSG_LIST, msglist)
     const msgGroup = {}
@@ -228,9 +229,6 @@ const recvMsg = function ({commit, state}) {
       msgGroup[v.chatid].push(v)
     })
     const chatList = Object.values(msgGroup)
-    chatList.map(v => {
-      v = [...v, 1]
-    })
     commit(types.SET_CHAT_LIST, chatList)
   })
 }

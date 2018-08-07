@@ -33,6 +33,7 @@ io.on('connection', function(socket) {
           content: msg,
           created_at: doc.created_at
         }
+        // console.log('1')
         io.emit('recvemsg', chatmsg)
       })
     })

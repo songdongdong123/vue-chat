@@ -51,6 +51,9 @@
       ])
     },
     methods: {
+      getUnreadId () {
+        // 获取所有当前聊天信息的chatid
+      },
       submitMsg () {
         this.sendMsg({form: this.$route.query.form, to: this.$route.query.to, msg: this.msg})
         this.msg = ''

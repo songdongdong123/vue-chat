@@ -4,7 +4,7 @@ const state = {
   userinfo: {},
   commentlist: [],
   msglist: [],
-  chatlist: [],
+  chatlist: {},
   unread: 0,
   users: {}
 }

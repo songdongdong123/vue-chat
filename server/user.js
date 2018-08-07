@@ -30,16 +30,19 @@ Router.post('/getChatMsgList', function(req, res) {
     },
     order: sequelize.col('id')
   }).then(doc => {
-    let users = {}
-    // 获取聊天记录里面的用户
-    doc.forEach(v => {
-      users[v.account.user_id] = {user_name: v.account.user_name, avatar: v.account.avatar}
+    account.findAll({}).then(docs => {
+      let users = {}
+      // 获取聊天记录里面的用户
+      docs.forEach(v => {
+        users[v.user_id] = {user_name: v.user_name, avatar: v.avatar}
+      })
+      return res.json({
+        code: 0,
+        data: doc,
+        users: users
+      })
     })
-    return res.json({
-      code: 0,
-      data: doc,
-      users: users
-    })
+
   })
 })
 
