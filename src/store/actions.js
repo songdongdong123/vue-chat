@@ -203,6 +203,14 @@ const getMsgList = function ({commit, state}) {
   getChatMsgList({}).then(res => {
     if (res.status === 200 && res.data.code === 0) {
       commit(types.SET_MSG_LIST, res.data.data)
+      const msgGroup = {}
+      res.data.data.forEach(v => {
+        msgGroup[v.chatid] = msgGroup[v.chatid] || []
+        msgGroup[v.chatid].push(v)
+      })
+      const chatList = Object.values(msgGroup)
+      commit(types.SET_CHAT_LIST, chatList)
+      commit(types.SET_USERS, res.data.users)
     }
   })
 }
@@ -210,14 +218,20 @@ const sendMsg = function ({commit, state}, {form, to, msg}) {
   socket.emit('sendmsg', {form, to, msg})
 }
 
-const recvMsg = function ({commit, state}, {form, to}) {
+const recvMsg = function ({commit, state}) {
   socket.on('recvemsg', function (data) {
-    // 获取chatid(由双方的userid组成)
-    // const chatid = getChatId(form, to)
-    // 删选聊天列表的数据，也就是只显示当前两个用户的聊天信息
-    // 如果不筛选，那么其他人发的消息也会展示在当前的聊天界面上
     const msglist = [...state.msglist, data]
     commit(types.SET_MSG_LIST, msglist)
+    const msgGroup = {}
+    msglist.forEach(v => {
+      msgGroup[v.chatid] = msgGroup[v.chatid] || []
+      msgGroup[v.chatid].push(v)
+    })
+    const chatList = Object.values(msgGroup)
+    chatList.map(v => {
+      v = [...v, 1]
+    })
+    commit(types.SET_CHAT_LIST, chatList)
   })
 }
 

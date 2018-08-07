@@ -42,6 +42,7 @@
     <attentionlist
       v-if="listtype === 2"
       :attentionlist="attentionlist"
+      :userid="userinfo.user_id"
     >
     </attentionlist>
     <div class="msg" @click="toChatList">

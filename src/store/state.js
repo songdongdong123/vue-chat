@@ -3,7 +3,10 @@ const state = {
   poetryItem: {},
   userinfo: {},
   commentlist: [],
-  msglist: []
+  msglist: [],
+  chatlist: [],
+  unread: 0,
+  users: {}
 }
 
 export default state

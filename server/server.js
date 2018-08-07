@@ -30,7 +30,8 @@ io.on('connection', function(socket) {
           chatid: doc.chatid,
           form: form,
           to: to,
-          content: msg
+          content: msg,
+          created_at: doc.created_at
         }
         io.emit('recvemsg', chatmsg)
       })

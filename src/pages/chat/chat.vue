@@ -1,18 +1,20 @@
 <template>
   <div class="chat">
+    <div class="chattitle">
+      <span class="icon-fanhui" @click="backTo"></span>
+      <p>{{username}}</p>
+    </div>
     <div class="msglist">
-      <div v-for="list in getmsglist.filter(v => {
-         return v.chatid === chatid
-        })"
+      <div v-for="list in getmsglist.filter(v => v.chatid === chatid)"
         class="basechatitem"
       >
       <div class="chatbase chatto" v-if="list.form===userid">
-        <span>{{list.content}}</span>
+        <p class="chatmsg">{{list.content}}</p>
         <img :src="require(`../../assets/avater/${list.account.avatar||1}.jpg`)" alt="">
       </div>
       <div class="chatbase chatme" v-else>
         <img :src="require(`../../assets/avater/${list.account.avatar||1}.jpg`)" alt="">
-        <span>{{list.content}}</span>
+        <p class="chatmsg">{{list.content}}</p>
       </div>
       </div>
     </div>
@@ -24,24 +26,24 @@
 </template>
 
 <script>
-  // import io from 'socket.io-client'
   import { mapActions, mapGetters } from 'vuex'
   import { getChatId } from 'common/js/common'
-  // const socket = io('ws://localhost:9094')
   export default {
     data () {
       return {
         msg: '',
         msglist: [],
         userid: '',
-        chatid: ''
+        chatid: '',
+        username: ''
       }
     },
     created () {
       this.userid = this.$route.query.form
+      this.username = this.$route.query.username
       this.chatid = getChatId(this.userid, this.$route.query.to)
       this.getMsgList()
-      this.recvMsg({form: this.$route.query.form, to: this.$route.query.to})
+      this.recvMsg()
     },
     computed: {
       ...mapGetters([
@@ -52,6 +54,9 @@
       submitMsg () {
         this.sendMsg({form: this.$route.query.form, to: this.$route.query.to, msg: this.msg})
         this.msg = ''
+      },
+      backTo () {
+        this.$router.back()
       },
       ...mapActions({
         getMsgList: 'getMsgList',
@@ -65,10 +70,22 @@
 <style lang="stylus" scoped>
   .chat
     color:#fff
+    .chattitle
+      height:45px
+      line-height:45px
+      text-align:center
+      position: relative
+      border-bottom:1px solid #ccc
+      .icon-fanhui
+        position:absolute
+        left:10px
+        font-size:20px
     .msglist
+      padding-top:20px
+      padding-bottom:70px
       .basechatitem
-        height:50px
-        line-height:50px
+        min-height:50px
+        margin:auto 15px
         .chatbase
           display:flex
           align-items:center
@@ -76,9 +93,14 @@
             width:40px
             height:40px
             border-radius:100%
+          .chatmsg
+            display:inline-block
+            overflow: hidden
+            word-wrap:break-word
+            width:100%
         .chatto
           justify-content:flex-end
-          text-align:left
+          text-align:right
           img
             margin-left:10px
         .chatme
@@ -98,8 +120,8 @@
       span
         display:inline-block
         height:50px
-        color:#000
-        background:#ccc
+        color:#fff
+        background: rgba(27,154,244,0.8)
         width:15%
         text-align:center
         line-height:50px
