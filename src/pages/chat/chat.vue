@@ -4,20 +4,25 @@
       <span class="icon-fanhui" @click="backTo"></span>
       <p>{{username}}</p>
     </div>
-    <div class="msglist">
-      <div v-for="list in getmsglist.filter(v => v.chatid === chatid)"
-        class="basechatitem"
-      >
-      <div class="chatbase chatto" v-if="list.form===userid">
-        <p class="chatmsg">{{list.content}}</p>
-        <img :src="require(`../../assets/avater/${list.account.avatar||1}.jpg`)" alt="">
+    <scroll
+      :data='getmsglist'
+      class="msglist"
+    >
+      <div>
+        <div v-for="list in getmsglist.filter(v => v.chatid === chatid)"
+          class="basechatitem"
+        >
+        <div class="chatbase chatto" v-if="list.form===userid">
+          <p class="chatmsg">{{list.content}}</p>
+          <img :src="require(`../../assets/avater/${list.account.avatar||1}.jpg`)" alt="">
+        </div>
+        <div class="chatbase chatme" v-else>
+          <img :src="require(`../../assets/avater/${list.account.avatar||1}.jpg`)" alt="">
+          <p class="chatmsg">{{list.content}}</p>
+        </div>
+        </div>
       </div>
-      <div class="chatbase chatme" v-else>
-        <img :src="require(`../../assets/avater/${list.account.avatar||1}.jpg`)" alt="">
-        <p class="chatmsg">{{list.content}}</p>
-      </div>
-      </div>
-    </div>
+    </scroll>
     <div class="sendmsg">
       <input type="text" v-model="msg" placeholder="输入聊天信息">
       <span @click="submitMsg">发送</span>
@@ -28,6 +33,7 @@
 <script>
   import { mapActions, mapGetters } from 'vuex'
   import { getChatId } from 'common/js/common'
+  import scroll from '@/components/scroll/scroll'
   export default {
     data () {
       return {
@@ -35,15 +41,16 @@
         msglist: [],
         userid: '',
         chatid: '',
-        username: ''
+        username: '',
+        to: ''
       }
     },
     created () {
       this.userid = this.$route.query.form
       this.username = this.$route.query.username
+      this.form = this.$route.query.form
       this.chatid = getChatId(this.userid, this.$route.query.to)
       this.getMsgList()
-      this.recvMsg()
     },
     computed: {
       ...mapGetters([
@@ -55,7 +62,7 @@
         // 获取所有当前聊天信息的chatid
       },
       submitMsg () {
-        this.sendMsg({form: this.$route.query.form, to: this.$route.query.to, msg: this.msg})
+        this.sendMsg({form: this.form, to: this.$route.query.to, msg: this.msg})
         this.msg = ''
       },
       backTo () {
@@ -64,8 +71,15 @@
       ...mapActions({
         getMsgList: 'getMsgList',
         sendMsg: 'sendMsg',
-        recvMsg: 'recvMsg'
+        readMsg: '_readMsg'
       })
+    },
+    beforeDestroy () {
+      // 标记消息已读
+      this.readMsg(this.form)
+    },
+    components: {
+      scroll
     }
   }
 </script>
@@ -79,6 +93,8 @@
       text-align:center
       position: relative
       border-bottom:1px solid #ccc
+      z-index:1000
+      background:#331caa
       .icon-fanhui
         position:absolute
         left:10px
@@ -86,6 +102,9 @@
     .msglist
       padding-top:20px
       padding-bottom:70px
+      height:80%
+      position:absolute
+      width:100%
       .basechatitem
         min-height:50px
         margin:auto 15px

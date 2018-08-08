@@ -42,7 +42,20 @@ Router.post('/getChatMsgList', function(req, res) {
         users: users
       })
     })
+  })
+})
 
+Router.post('/readMsg', function(req, res) {
+  chat.update(
+    {'read': true},
+    {'where': {
+      'to': req.body.form
+    }}
+  ).then(doc => {
+    return res.json({
+      code: 0,
+      data: doc
+    })
   })
 })
 
