@@ -42,7 +42,6 @@
     },
     created () {
       this.getMsgList()
-      this.recvMsg()
     },
     computed: {
       ...mapGetters([
@@ -62,8 +61,7 @@
         this.$router.push({path: '/chat', query: {form: userid, to: to, username: username}})
       },
       ...mapActions({
-        getMsgList: 'getMsgList',
-        recvMsg: 'recvMsg'
+        getMsgList: 'getMsgList'
       })
     }
   }

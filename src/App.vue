@@ -6,13 +6,22 @@
 </template>
 
 <script>
-import particle from '@/components/particle/particle'
-export default {
-  name: 'App',
-  components: {
-    particle
+  import { mapActions } from 'vuex'
+  import particle from '@/components/particle/particle'
+  export default {
+    name: 'App',
+    created () {
+      this.recvMsg()
+    },
+    methods: {
+      ...mapActions({
+        recvMsg: 'recvMsg'
+      })
+    },
+    components: {
+      particle
+    }
   }
-}
 </script>
 
 <style>

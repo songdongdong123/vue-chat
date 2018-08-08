@@ -67,7 +67,6 @@
     created () {
       this.getUserInfo()
       this.getMsgList()
-      this.recvMsg()
     },
     methods: {
       toChatList () {
@@ -125,8 +124,6 @@
         '_getUserInfo',
         '_getUserAttentionlist',
         '_getUserFans',
-        'sendMsg',
-        'recvMsg',
         'getMsgList'
       ])
     },
