@@ -32,14 +32,21 @@ Router.post('/getChatMsgList', function(req, res) {
   }).then(doc => {
     account.findAll({}).then(docs => {
       let users = {}
+      let unread = 0
       // 获取聊天记录里面的用户
       docs.forEach(v => {
         users[v.user_id] = {user_name: v.user_name, avatar: v.avatar}
       })
+      doc.forEach(v => {
+        if (v.to === user_id && !v.read) {
+          unread++
+        }
+      })
       return res.json({
         code: 0,
         data: doc,
-        users: users
+        users: users,
+        unread: unread
       })
     })
   })
@@ -227,31 +234,35 @@ Router.get('/getPoetryList', function(req, res) {
       ['create_temp', 'DESC'], // 这；i按照时间顺序进行排序
     ]
   }).then((doc) => {
-    supportlist.findAll({
-      // 获取当前用户的点赞文章的列表
-      where: {
-        "user_id": req.cookies.user_id
-      }
-    }).then(suplist => {
-      // 数据处理
-      for (let i = 0; i < doc.length; i++) {
-        doc[i].dataValues.isAttention = false
-        if (suplist.length) {
-          for (let j = 0; j < suplist.length; j++) {
-            if (doc[i].dataValues.poetrylist_id === suplist[j].dataValues.poetrylist_id){
-              doc[i].dataValues.isAttention = true
-            }
-          }
-        } else {
-          doc[i].dataValues.isAttention = false
-        }
-      }
-      return res.json({
-        code: 0,
-        data: doc,
-        suplist: suplist
-      })
+    return res({
+      code: 0,
+      data: doc
     })
+    // supportlist.findAll({
+    //   // 获取当前用户的点赞文章的列表
+    //   where: {
+    //     "user_id": req.cookies.user_id
+    //   }
+    // }).then(suplist => {
+    //   // 数据处理
+    //   for (let i = 0; i < doc.length; i++) {
+    //     doc[i].dataValues.isAttention = false
+    //     if (suplist.length) {
+    //       for (let j = 0; j < suplist.length; j++) {
+    //         if (doc[i].dataValues.poetrylist_id === suplist[j].dataValues.poetrylist_id){
+    //           doc[i].dataValues.isAttention = true
+    //         }
+    //       }
+    //     } else {
+    //       doc[i].dataValues.isAttention = false
+    //     }
+    //   }
+    //   return res.json({
+    //     code: 0,
+    //     data: doc,
+    //     suplist: suplist
+    //   })
+    // })
   })
 })
 

@@ -47,6 +47,9 @@
     </attentionlist>
     <div class="msg" @click="toChatList">
       <span class="icon-xinfeng"></span>
+      <p class="number" v-show="getUnread">
+        <span>{{getUnread}}</span>
+      </p>
     </div>
   </div>
 </template>
@@ -54,7 +57,7 @@
 <script>
   import poetrylistcompent from '../../components/poetrylist/poetrylist'
   import attentionlist from '@/components/attentionlist/attentionlist'
-  import { mapActions } from 'vuex'
+  import { mapActions, mapGetters } from 'vuex'
   export default {
     data () {
       return {
@@ -67,6 +70,11 @@
     created () {
       this.getUserInfo()
       this.getMsgList()
+    },
+    computed: {
+      ...mapGetters([
+        'getUnread'
+      ])
     },
     methods: {
       toChatList () {
@@ -200,7 +208,22 @@
       line-height:50px
       text-align:center
       border-radius:100%
-    .icon-xinfeng
-      font-size:25px
+      .icon-xinfeng
+        font-size:25px
+      .number
+        position:absolute
+        top:5px
+        left:50%
+        transform:translateX(-50%)
+        width:20px
+        height:20px
+        border-radius:100%
+        background:red
+        text-align:center
+        line-height:20px
+        font-size:12px
+        span
+          transform:scale(0.6)
+          font-family: Tahoma!important
 </style>
 

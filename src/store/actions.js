@@ -210,7 +210,8 @@ const getMsgList = function ({commit, state}) {
       })
       const chatList = Object.values(msgGroup)
       commit(types.SET_CHAT_LIST, chatList)
-      commit(types.SET_USERS, res.data.users)
+      commit(types.SET_USERS, {...res.data.users})
+      commit(types.SET_UNREAD, res.data.unread)
     }
   })
 }
@@ -229,6 +230,7 @@ const recvMsg = function ({commit, state}) {
     })
     const chatList = Object.values(msgGroup)
     commit(types.SET_CHAT_LIST, chatList)
+    commit(types.SET_UNREAD, state.unread + 1)
   })
 }
 

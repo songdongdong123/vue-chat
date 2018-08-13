@@ -10,7 +10,7 @@
             <p class="username">{{list.account.user_name}}</p>
             <p class="creattime">{{list.create_temp|forMatDate(list.create_temp)}}</p>
           </div>
-          <div class="keep_attention" @click.stop="subscription(list)">
+          <div class="keep_attention" @click.stop="subscription(list)" v-show="list.user_id!==cookie">
             <span>+ 关注</span>
           </div>
         </div>
